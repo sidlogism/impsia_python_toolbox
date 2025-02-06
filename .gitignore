@@ -1,0 +1,30 @@
+########################################
+# ignore all files in blacklist below
+# especially ignore often changing ".dropbox" !!
+########################################
+# *.dropbox
+########################################
+# vim files
+########################################
+.swp
+*~
+*.swp
+########################################
+# eclipse files
+########################################
+# .cproject
+# .project
+# .settings
+########################################
+# generated files e.g. executables
+########################################
+*.log
+*.pyc
+__pycache__
+########################################
+# cmake files
+########################################
+# CMakeCache.txt
+# CMakeFiles/
+# Makefile
+# cmake_install.cmake
