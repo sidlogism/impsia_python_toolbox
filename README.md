@@ -19,16 +19,18 @@ from impsia.python_toolbox.subprocess_tools import SubprocessRunner
 
 Side notes:
 * The project intentionally uses the so called "src layout" for a cleaner an more epxlicit import handling as pointed out in https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
-* Currently these tools can only be installed in the described manual 'ad hoc' manner. Distribution via PyPY as a fully fledged "distribution package" (with sdists and bdists) is not planned yet. 
+** Possible workaround for making the "import package" directly executable: https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#running-a-command-line-interface-from-source-with-src-layout
+* Currently these tools can only be installed in the described manual "ad hoc" manner. Distribution via PyPY as a fully fledged "distribution package" (with sdists and bdists) is not planned yet. 
+** However you can currently build the "distribution package" yourself by running the following command in the "distribution roo" (see below): python3 -m build
 
+## How to run the unittest, doctests an linters automatically ##
 
-## How to run the sample application ##
-See 'supported platforms' above!
+TODO
 
 
 ## How to run the unittests and the single doctests manually ##
-In 'distribution root' (see above) run: python3 -m unittest discover -v -s tests
-In 'package directory' run: python3 -m doctest -v impsia_subprocess_handling.py
+In "distribution root" (see below) run: python3 -m unittest discover -v -s tests
+In "import package" directory run: python3 -m doctest -v subprocess_tools.py
 
 
 ## License and usage limitations ##
@@ -40,18 +42,18 @@ For uniformity and simplicitiy, all documentation will stick to the following te
 
 * "import package" (or regular, simple package):
 ** e. g. folder impsia/python_toolbox/
-** Directories containing a '__init__.py' file.
+** Directory containing a "__init__.py" file (and further python modules).
 ** in accordance with the PyPA-terminology:
 - https://packaging.python.org/en/latest/glossary/#term-Import-Package
 - https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
 - https://packaging.python.org/en/latest/tutorials/packaging-projects/
 
 * "namespace package"
-** e. g. all "impsia" directories without '__init__.py' file
+** e. g. all "impsia" directories without "__init__.py" file
 ** see: https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
 
 * "distribution root" directory (or "project root" directory)
-** Directory containing the setup.cfg file and also the base directory of the git repository for project 'impsia_python_toolbox'.
+** Directory containing the setup.cfg file and also the base directory of the git repository for project "impsia_python_toolbox".
 ** in accordance with the PyPA-terminology: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
 
 * "src layout"/"src-layout", see:
