@@ -1,7 +1,7 @@
 # Project impsia_python_toolbox
 
 ## What it does ##
-This is a personal to use collection of small python tools frequently or occasionally needed in smaller python experiments and python scripts.
+This is a personal collection of small python tools frequently or occasionally needed in smaller python experiments and python scripts.
 
 
 ## Installation ##

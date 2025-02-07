@@ -1,3 +1,32 @@
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]  # ["."] by default
+namespaces = true  # true by default
+
+[project]
+name = "impsia_python_toolbox"
+version = "0.0.1"
+authors = [
+    {name = "imperfectsilentart", email = "imperfectsilentart@mailbox.org"},
+]
+description = "This is a personal collection of small python tools frequently or occasionally needed in smaller python experiments and python scripts."
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["toolbox", "subprocess", "scripting"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+	"Operating System :: POSIX :: BSD :: OpenBSD",
+#    "Operating System :: OS Independent",
+]
+license = {text = "Apache-2.0"}
+# license-files = ["LICEN[CS]E*"]
+# in case we can later retrieve some metadata dynamically: https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
+# dynamic = ["version"]
+
+
+[project.urls]
+Homepage = "https://github.com/imperfectsilentart/impsia_python_toolbox/"
+Issues = "https://github.com/imperfectsilentart/impsia_python_toolbox/issues/"
