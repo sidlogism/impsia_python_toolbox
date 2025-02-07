@@ -3,7 +3,7 @@
 
 import unittest
 from typing import List, Dict, Any
-from impsia_python_toolbox.impsia_subprocess_handling import SubprocessRunner
+from src.impsia.python_toolbox.subprocess_tools import SubprocessRunner
 
 
 class TestRunCommandline(unittest.TestCase):

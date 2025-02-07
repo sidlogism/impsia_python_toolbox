@@ -2,20 +2,58 @@
 
 ## What it does ##
 This is a personal to use collection of small python tools frequently or occasionally needed in smaller python experiments and python scripts.
-Supported platforms: OpenBSD. Not tested on Windows & Linux (yet).
+
 
 ## Installation ##
-Just clone the git repo. This downloads the 'impsia_python_toolbox' directory containing the '__init__.py' file, which we call 'package directory'. We call the parent directory of the 'package directory' the 'distribution root' directory in accordance with the PyPA-terminology (https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology). It is the directory containing the setup.py file and also the base directory of the git repository for project 'impsia_python_toolbox'.
-For package installation either simply copy the 'package directory' somewhere in your sys.path or change your sys.path or environment variable PYTHONPATH accordingly.
+Supported platforms: OpenBSD. Not tested on Windows & Linux (yet).
 
-Side note: Currently these tools can only be installed in the described manual 'ad hoc' manner. Maybe in the future this package might be bundled into a fully fledged python package with sdists and bdists for distribution on PyPY. But that's not planned yet. 
+Just clone the git repo and import the modules by modifying your sys.path or environment variable PYTHONPATH accordingly.
+Here is an example:
+#!/usr/bin/env python3
+
+import sys
+sys.path.append('/home/myuser/Downloads/impsia_python_toolbox/src/')
+import impsia.python_toolbox
+import impsia.python_toolbox.subprocess_tools
+from impsia.python_toolbox.subprocess_tools import SubprocessRunner
+
+Side notes:
+* The project intentionally uses the so called "src layout" for a cleaner an more epxlicit import handling as pointed out in https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
+* Currently these tools can only be installed in the described manual 'ad hoc' manner. Distribution via PyPY as a fully fledged "distribution package" (with sdists and bdists) is not planned yet. 
+
 
 ## How to run the sample application ##
 See 'supported platforms' above!
+
 
 ## How to run the unittests and the single doctests manually ##
 In 'distribution root' (see above) run: python3 -m unittest discover -v -s tests
 In 'package directory' run: python3 -m doctest -v impsia_subprocess_handling.py
 
+
 ## License and usage limitations ##
 The tools are free to use. No warranty or liability of any kind included. See license for details.
+
+
+## Terminology ##
+For uniformity and simplicitiy, all documentation will stick to the following terminology:
+
+* "import package" (or regular, simple package):
+** e. g. folder impsia/python_toolbox/
+** Directories containing a '__init__.py' file.
+** in accordance with the PyPA-terminology:
+- https://packaging.python.org/en/latest/glossary/#term-Import-Package
+- https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
+- https://packaging.python.org/en/latest/tutorials/packaging-projects/
+
+* "namespace package"
+** e. g. all "impsia" directories without '__init__.py' file
+** see: https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
+
+* "distribution root" directory (or "project root" directory)
+** Directory containing the setup.cfg file and also the base directory of the git repository for project 'impsia_python_toolbox'.
+** in accordance with the PyPA-terminology: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
+
+* "src layout"/"src-layout", see:
+** https://setuptools.pypa.io/en/latest/userguide/package_discovery.html#src-layout
+** https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
