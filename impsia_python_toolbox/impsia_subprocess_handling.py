@@ -9,19 +9,31 @@ if __name__ == "__main__":
 ERRNO_UNKNOWN = 1
 
 
-def run_commandline_as_subprocess(commandline: str) -> Dict[str, Any]:
-	"""TODO"""
-	stdout_value = 'gotcha stdout'
-	stderr_value = 'gotcha stderr'
-	subprocess_hangs = False
+class SubprocessRunner:
+	def __init__(self):
+		self.encoding = 'utf8'
 
-	results = {}
-	results['stdout_value'] = stdout_value
-	results['stderr_value'] = stderr_value
-	returncode = None
-	if returncode:
-		results['returncode'] = returncode
-	else:
-		results['returncode'] = ERRNO_UNKNOWN
-	results['subprocess_hangs'] = subprocess_hangs
-	return results
+
+	def run_commandline(self, commandline: str) -> Dict[str, Any]:
+		"""Runs given command line as subprocess (and thereby potentially running external applications).
+		
+		Usage examples:
+		>>> runner = SubprocessRunner()
+		>>> results = runner.run_commandline('echo "gotcha stdout" ')
+		>>> results['stdout_value']
+		'gotcha stdout'
+		"""
+		stdout_value = 'gotcha stdout'
+		stderr_value = 'gotcha stderr'
+		subprocess_hangs = False
+
+		results = {}
+		results['stdout_value'] = stdout_value
+		results['stderr_value'] = stderr_value
+		returncode = None
+		if returncode:
+			results['returncode'] = returncode
+		else:
+			results['returncode'] = ERRNO_UNKNOWN
+		results['subprocess_hangs'] = subprocess_hangs
+		return results
