@@ -30,7 +30,8 @@ TODO
 
 ## How to run the unittests and the single doctests manually ##
 In "distribution root" (see below) run: python3 -m unittest discover -v -s tests
-In "import package" directory run: python3 -m doctest -v subprocess_tools.py
+In "distribution root" (see below) run: python3 -m doctest -v src/impsia/python_toolbox/*.py
+In "import package" (see below) directory run: python3 -m doctest -v subprocess_tools.py
 
 
 ## License and usage limitations ##

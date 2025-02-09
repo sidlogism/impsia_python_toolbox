@@ -1,5 +1,5 @@
 """TODO"""
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 
 if __name__ == "__main__":
@@ -13,21 +13,20 @@ class SubprocessRunner:
 	def __init__(self):
 		self.encoding = 'utf8'
 
-
 	def run_commandline(self, commandline: str) -> Dict[str, Any]:
 		"""Runs given command line as subprocess (and thereby potentially running external applications).
-		
+
 		Usage examples:
 		>>> runner = SubprocessRunner()
 		>>> results = runner.run_commandline('echo "gotcha stdout" ')
 		>>> results['stdout_value']
 		'gotcha stdout'
 		"""
-		stdout_value = 'gotcha stdout'
-		stderr_value = 'gotcha stderr'
-		subprocess_hangs = False
+		stdout_value: str = 'gotcha stdout'
+		stderr_value: str = 'gotcha stderr'
+		subprocess_hangs: bool = False
 
-		results = {}
+		results: dict[str, Any] = {}
 		results['stdout_value'] = stdout_value
 		results['stderr_value'] = stderr_value
 		returncode = None
