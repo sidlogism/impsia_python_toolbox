@@ -1,9 +1,6 @@
-""" Provide utilities for handling logging.
+"""Provide utilities for handling logging."""
 
-
-"""
-
-""" Line of special characters for separating log sections visually. """
+# Line of special characters for separating log sections visually.
 VISUAL_LOG_SEPARATOR_LINE__LEVEL1 = 80 * '#'
 
 if __name__ == "__main__":

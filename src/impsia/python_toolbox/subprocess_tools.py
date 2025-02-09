@@ -1,4 +1,4 @@
-"""TODO"""
+"""Tools for handling subprocesses."""
 from typing import Dict, Any
 
 
@@ -10,11 +10,15 @@ ERRNO_UNKNOWN = 1
 
 
 class SubprocessRunner:
+	"""Utility-wrapper for running subprocesses easily and reliably."""
+
 	def __init__(self):
+		"""Initialize internal intance variables of wrapper for running subprocesses."""
 		self.encoding = 'utf8'
 
 	def run_commandline(self, commandline: str) -> Dict[str, Any]:
-		"""Runs given command line as subprocess (and thereby potentially running external applications).
+		"""
+		Run given command line as subprocess (and thereby potentially running external applications).
 
 		Usage examples:
 		>>> runner = SubprocessRunner()

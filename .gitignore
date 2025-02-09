@@ -16,9 +16,8 @@
 # .project
 # .settings
 ########################################
-# generated files e.g. executables
+# generated pyhon files e.g. executables
 ########################################
-*.log
 *.pyc
 *.pyo
 *.pyd
@@ -34,3 +33,8 @@ dist
 # CMakeFiles/
 # Makefile
 # cmake_install.cmake
+########################################
+# other locally generated files (e. g. by aspell)
+########################################
+*.bak
+*.log

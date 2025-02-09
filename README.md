@@ -18,17 +18,17 @@ import impsia.python_toolbox.subprocess_tools
 from impsia.python_toolbox.subprocess_tools import SubprocessRunner
 
 Side notes:
-* The project intentionally uses the so called "src layout" for a cleaner an more epxlicit import handling as pointed out in https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
+* The project intentionally uses the so called "src layout" for a cleaner an more explicit import handling as pointed out in https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
 ** Possible workaround for making the "import package" directly executable: https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#running-a-command-line-interface-from-source-with-src-layout
-* Currently these tools can only be installed in the described manual "ad hoc" manner. Distribution via PyPY as a fully fledged "distribution package" (with sdists and bdists) is not planned yet. 
-** However you can currently build the "distribution package" yourself by running the following command in the "distribution roo" (see below): python3 -m build
+* Currently these tools can only be installed in the described manual "ad hoc" manner. Distribution via PyPI as a fully fledged "distribution package" (with sdists and bdists) is not planned yet. 
+** However you can currently build the "distribution package" yourself by running the following command in the "distribution root" (see below): python3 -m build
 
-## How to run the unittest, doctests an linters automatically ##
+## How to run the unit tests, doctests an linters automatically ##
 
 TODO
 
 
-## How to run the unittests and the single doctests manually ##
+## How to run the unit tests and the single doctests manually ##
 In "distribution root" (see below) run: python3 -m unittest discover -v -s tests
 In "distribution root" (see below) run: python3 -m doctest -v src/impsia/python_toolbox/*.py
 In "import package" (see below) directory run: python3 -m doctest -v subprocess_tools.py
@@ -39,7 +39,7 @@ The tools are free to use. No warranty or liability of any kind included. See li
 
 
 ## Terminology ##
-For uniformity and simplicitiy, all documentation will stick to the following terminology:
+For uniformity and simplicity, all documentation will stick to the following terminology:
 
 * "import package" (or regular, simple package):
 ** e. g. folder impsia/python_toolbox/
