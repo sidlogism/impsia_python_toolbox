@@ -7,6 +7,7 @@ if __name__ == "__main__":
 
 
 ERRNO_UNKNOWN = 1
+__all__ = ['SubprocessRunner']
 
 
 class SubprocessRunner:
