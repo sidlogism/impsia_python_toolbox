@@ -13,8 +13,8 @@ Here is an example:
 
 import sys
 sys.path.append('/home/myuser/Downloads/impsia_python_toolbox/src/')
-import impsia.python_toolbox
-import impsia.python_toolbox.subprocess_tools
+from impsia.python_toolbox import logging_tools
+from impsia.python_toolbox import subprocess_tools
 from impsia.python_toolbox.subprocess_tools import SubprocessRunner
 
 Side notes:
