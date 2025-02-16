@@ -58,6 +58,7 @@ def _current_user_has_admin_privileges() -> bool:
 def print_my_logwelcome(executing_script_basename: str, argv: list[str], start_time: datetime) -> None:
 	"""Print an elaborated first status-message containing detailed information about the calling python script or module."""
 	logger: Logger = logging.getLogger(__name__)
+	logger.setLevel(logging.INFO)
 	logger.info(LOGSEPARATOR_HASH)
 	logger.info(f'Starting script "{executing_script_basename}" with arguments "{str(argv[1:])}".')
 	logger.info(f'Current user:"{str(_get_current_user_name())}" has administrator/superuser privileges:"{str(_current_user_has_admin_privileges())}".')
@@ -72,6 +73,7 @@ def print_my_logwelcome(executing_script_basename: str, argv: list[str], start_t
 def print_my_loggoodbye(start_time: datetime) -> None:
 	"""Print an elaborated final last status-message containing detailed information about the calling python script or module."""
 	logger: Logger = logging.getLogger(__name__)
+	logger.setLevel(logging.INFO)
 	logger.info(LOGSEPARATOR_UNDERSCORE)
 	logger.info(f'Finished script which startet at: {start_time.strftime(DATEFORMAT_STARTING_TIME)}.')
 	time_diff: timedelta = datetime.now() - start_time

@@ -23,11 +23,11 @@ class SubprocessRunner:
 
 		Usage examples:
 		>>> runner = SubprocessRunner()
-		>>> results = runner.run_commandline('echo "gotcha stdout" ')
+		>>> results = runner.run_commandline('echo "gotcha! echo was successful!" ')
 		>>> results['stdout_value']
-		'gotcha stdout'
+		'gotcha! echo was successful!'
 		"""
-		stdout_value: str = 'gotcha stdout'
+		stdout_value: str = 'gotcha! echo was successful!'
 		stderr_value: str = 'gotcha stderr'
 		subprocess_hangs: bool = False
 

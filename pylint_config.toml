@@ -2,30 +2,15 @@
 # Files or directories to be skipped. They should be base names, not paths.
 ignore = [".git"]
 
-# Add files or directories matching the regular expressions patterns to the
-# ignore-list. The regex matches against paths and can be in Posix or Windows
-# format. Because '\\' represents the directory delimiter on Windows systems, it
-# can't be used as an escape character.
-# ignore-paths =
-
 # Files or directories matching the regular expression patterns are skipped. The
 # regex matches against base names, not paths.
-#ignore-patterns = ["^.*~"]
-
-# List of module names for which member attributes should not be checked (useful
-# for modules/projects where namespaces are manipulated during runtime and thus
-# existing member attributes cannot be deduced by static analysis). It supports
-# qualified module names, as well as Unix pattern matching.
-# ignored-modules =
-
-# Python code to execute, usually for sys.path manipulation such as
-# pygtk.require().
-# init-hook =
+ignore-patterns = ["^.*~", "^.*\\.swp"]
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use, and will cap the count on Windows to
 # avoid hangs.
 jobs = 0
+
 
 [tool.pylint.format]
 # Regexp for a line that is allowed to be longer than the limit.
@@ -37,11 +22,6 @@ indent-string = "\t"
 # Maximum number of characters on a single line.
 max-line-length = 150
 
-
-[tool.pylint.logging]
-# The type of string formatting that logging methods do. `old` means using %
-# formatting, `new` is for `{}` formatting.
-#logging-format-style = "new"
 
 [tool.pylint."messages control"]
 # Disable the message, report, category or checker with the given id(s). You can
@@ -58,6 +38,7 @@ max-line-length = 150
 #     W1201: Use lazy % formatting in logging functions (logging-not-lazy)
 #     W1203: Use lazy % or % formatting in logging functions (logging-fstring-interpolation)
 disable = ["logging-not-lazy","logging-fstring-interpolation"]
+
 
 [tool.pylint.miscellaneous]
 # List of note tags to take in consideration, separated by a comma.

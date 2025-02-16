@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""TODO"""
+"""Unit test cases for testing the subprocess tools and subproces sutilities of impsia_python_toolbox."""
 
 import unittest
 from typing import Any
 from src.impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pylint: disable=import-error
 ########################################
-# The above import statment is fine by most linters except for pylint, which throws the following error:
+# The above import statement is fine by most linters except for pylint, which throws the following error:
 # E0401: Unable to import 'src.impsia.python_toolbox.subprocess_tools' (import-error)
 #
 # The following import construct is a possible workaround for pylint--error:
@@ -19,18 +19,19 @@ from src.impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pyl
 # pylint C0413: Import "from impsia.p... import SubprocessRunner" should be placed at the top of the module (wrong-import-position)
 # flake8 E402 module level import not at top of file
 ########################################
-__all__ = ['TestSubprocessRunner']
+__all__: list[str] = ['TestSubprocessRunner']
 
 
 class TestSubprocessRunner(unittest.TestCase):
 	"""Test SubprocessRunner-wrapper."""
 	def test_run_commandline(self) -> None:
-		"""Test SubprocessRunner.run_coomandline ."""
-		echo_text: str = 'gotcha stdout'
+		"""Test SubprocessRunner.run_commandline ."""
+		echo_text: str = 'gotcha! echo was successful!'
 		runner: SubprocessRunner = SubprocessRunner()
 		results: dict[str, Any] = runner.run_commandline(f'echo "{echo_text}" ')
 		stdout_value: str = results['stdout_value']
-		self.assertEqual(stdout_value, echo_text, 'The stdout-result from the executed subprocess is not as expected.')
+		self.assertEqual(stdout_value, echo_text,
+			'The stdout-result from the executed subprocess is not as expected because it doesn\'t contain the expected keywords.')
 
 
 if __name__ == '__main__':
