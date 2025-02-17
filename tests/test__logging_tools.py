@@ -29,7 +29,7 @@ __all__: list[str] = ['TestLoggingTools']
 
 
 class TestLoggingTools(unittest.TestCase):
-	"""Unit test case for testing the logging tools and logging utilities of impsia_python_toolbox."""
+	"""Unit test case for testing the logging configuration and the loging tools and utilities of impsia_python_toolbox."""
 
 	def setUp(self) -> None:
 		# get script starting time for logwelcome/loggoodbye
@@ -47,7 +47,6 @@ class TestLoggingTools(unittest.TestCase):
 
 	def test_print_my_logwelcome(self) -> None:
 		"""Test logging_tools.print_my_logwelcome."""
-
 		# Get basename of the currenlty executed script file. Don't pass sys.argv[0], but use inspect instead.
 		executing_script_basename: str = os.path.basename(inspect.getfile(inspect.currentframe()))    # type: ignore[arg-type]
 		########################################
@@ -59,7 +58,7 @@ class TestLoggingTools(unittest.TestCase):
 		# Details on the cast-function from typing module: https://peps.python.org/pep-0484/#casts
 		########################################
 
-		# perform the actual test
+		# perform the actual logging-test
 		logging_tools.print_my_logwelcome(executing_script_basename, sys.argv, self.start_time)
 		# check the last line of printed welcome-text
 		expected_keywords: str = logging_tools.LOGSEPARATOR_UNDERSCORE
@@ -67,7 +66,6 @@ class TestLoggingTools(unittest.TestCase):
 
 	def test_print_my_loggoodbye(self) -> None:
 		"""Test logging_tools.print_my_loggoodbye."""
-		# perform the actual test
 		logging_tools.print_my_loggoodbye(self.start_time)
 		# check the last line of printed goodbye-text
 		expected_keywords: str = logging_tools.LOGSEPARATOR_HASH
@@ -75,15 +73,13 @@ class TestLoggingTools(unittest.TestCase):
 
 	def test_logging_config(self) -> None:
 		"""Test logging-config in general."""
-		# perform the actual test
 		expected_keywords: str = 'gotcha! logging was successful!'
 		LOGGER.info(expected_keywords)
 		# check the last line of printed log-text
 		self._compare_last_logline_with_expected_keywords(expected_keywords)
 
 	def test_logging_hierarchy(self) -> None:
-		"""Test logging-config in general."""
-		# perform the actual test
+		"""Test logging hierarchy via child logger."""
 		expected_keywords: str = 'gotcha! logging via child logger was successful!'
 		child_logger = LOGGER.getChild('childlogger')
 		child_logger.info(expected_keywords)
