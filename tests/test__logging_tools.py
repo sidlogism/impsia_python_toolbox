@@ -35,7 +35,16 @@ class TestLoggingTools(unittest.TestCase):
 		# get script starting time for logwelcome/loggoodbye
 		self.start_time: datetime = datetime.now()
 
-	# common function _get_last_line_in_logfile
+	def _compare_last_logline_with_expected_keywords(self, expected_keywords: str) -> None:
+		"""Compare the last line of the test-logfile with the given expected keywords and require both to be equal as unit test condition."""
+		expected_keywords_length: int = len(expected_keywords)
+		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=LOGFILE_ENCODING, newline=None) as logfile:
+			lines: list[str] = logfile.read().splitlines()
+			last_line: str = lines[-1]
+			logged_content: str = last_line[-expected_keywords_length:]
+			self.assertEqual(expected_keywords, logged_content,
+				'The logged output from the created logfile is not as expected because it doesn\'t contain the expected keywords.')
+
 	def test_print_my_logwelcome(self) -> None:
 		"""Test logging_tools.print_my_logwelcome."""
 
@@ -54,13 +63,7 @@ class TestLoggingTools(unittest.TestCase):
 		logging_tools.print_my_logwelcome(executing_script_basename, sys.argv, self.start_time)
 		# check the last line of printed welcome-text
 		expected_keywords: str = logging_tools.LOGSEPARATOR_UNDERSCORE
-		expected_keywords_length: int = len(expected_keywords)
-		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=LOGFILE_ENCODING, newline=None) as logfile:
-			lines: list[str] = logfile.read().splitlines()
-			last_line: str = lines[-1]
-			logged_content: str = last_line[-expected_keywords_length:]
-			self.assertEqual(expected_keywords, logged_content,
-				'The logged output from the created logfile is not as expected because it doesn\'t contain the expected keywords.')
+		self._compare_last_logline_with_expected_keywords(expected_keywords)
 
 	def test_print_my_loggoodbye(self) -> None:
 		"""Test logging_tools.print_my_loggoodbye."""
@@ -68,13 +71,7 @@ class TestLoggingTools(unittest.TestCase):
 		logging_tools.print_my_loggoodbye(self.start_time)
 		# check the last line of printed goodbye-text
 		expected_keywords: str = logging_tools.LOGSEPARATOR_HASH
-		expected_keywords_length: int = len(expected_keywords)
-		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=LOGFILE_ENCODING, newline=None) as logfile:
-			lines: list[str] = logfile.read().splitlines()
-			last_line: str = lines[-1]
-			logged_content: str = last_line[-expected_keywords_length:]
-			self.assertEqual(expected_keywords, logged_content,
-				'The logged output from the created logfile is not as expected because it doesn\'t contain the expected keywords.')
+		self._compare_last_logline_with_expected_keywords(expected_keywords)
 
 	def test_logging_config(self) -> None:
 		"""Test logging-config in general."""
@@ -82,13 +79,16 @@ class TestLoggingTools(unittest.TestCase):
 		expected_keywords: str = 'gotcha! logging was successful!'
 		LOGGER.info(expected_keywords)
 		# check the last line of printed log-text
-		expected_keywords_length: int = len(expected_keywords)
-		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=LOGFILE_ENCODING, newline=None) as logfile:
-			lines: list[str] = logfile.read().splitlines()
-			last_line: str = lines[-1]
-			logged_content: str = last_line[-expected_keywords_length:]
-			self.assertEqual(expected_keywords, logged_content,
-				'The logged output from the created logfile is not as expected because it doesn\'t contain the expected keywords.')
+		self._compare_last_logline_with_expected_keywords(expected_keywords)
+
+	def test_logging_hierarchy(self) -> None:
+		"""Test logging-config in general."""
+		# perform the actual test
+		expected_keywords: str = 'gotcha! logging via child logger was successful!'
+		child_logger = LOGGER.getChild('childlogger')
+		child_logger.info(expected_keywords)
+		# check the last line of printed log-text
+		self._compare_last_logline_with_expected_keywords(expected_keywords)
 
 
 if __name__ == '__main__':

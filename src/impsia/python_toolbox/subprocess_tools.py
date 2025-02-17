@@ -1,9 +1,13 @@
 """Tools for handling subprocesses."""
+import os
+import sys
 from typing import Dict, Any
 
 
 if __name__ == "__main__":
+	# exit execution and indicate error
 	print("ERROR: this module is not intended for direct execution as standalone script.")
+	sys.exit(os.EX_USAGE)
 
 
 ERRNO_UNKNOWN = 1

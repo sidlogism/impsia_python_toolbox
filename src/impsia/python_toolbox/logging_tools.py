@@ -8,7 +8,9 @@ from logging import Logger
 
 
 if __name__ == "__main__":
+	# exit execution and indicate error
 	print("ERROR: this module is not intended for direct execution as standalone script.")
+	sys.exit(os.EX_USAGE)
 
 # Lines of special characters for separating log sections visually.
 LOGSEPARATOR_HASH: str = 20 * '#'
