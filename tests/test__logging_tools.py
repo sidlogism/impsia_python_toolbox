@@ -38,9 +38,11 @@ class TestLoggingTools(unittest.TestCase):
 	def _compare_last_logline_with_expected_keywords(self, expected_keywords: str) -> None:
 		"""Compare the last line of the test-logfile with the given expected keywords and require both to be equal as unit test condition."""
 		expected_keywords_length: int = len(expected_keywords)
-		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=LOGFILE_ENCODING, newline=None) as logfile:
+		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=LOGFILE_ENCODING) as logfile:
+			# read all lines until EOF and get last line
 			lines: list[str] = logfile.read().splitlines()
 			last_line: str = lines[-1]
+			# extract relevant part at the end of last line for comparison
 			logged_content: str = last_line[-expected_keywords_length:]
 			self.assertEqual(expected_keywords, logged_content,
 				'The logged output from the created logfile is not as expected because it doesn\'t contain the expected keywords.')

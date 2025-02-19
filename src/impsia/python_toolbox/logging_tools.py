@@ -20,7 +20,6 @@ LOGSEPARATOR_UNDERSCORE: str = 20 * '_'
 LOGSEPARATOR_HYPHEN: str = 20 * '-'
 LOGSEPARATOR_DOT: str = 20 * '.'
 
-# TODO retry new str.format()-expressions
 DATEFORMAT_STARTING_TIME = '%H:%M:%S, %Y-%m-%d %A (%d %B %Y)'
 
 
