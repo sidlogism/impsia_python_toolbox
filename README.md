@@ -9,30 +9,31 @@ Supported platforms: OpenBSD. Not tested on Windows & Linux (yet).
 
 Just clone the git repo and import the modules by modifying your sys.path or environment variable PYTHONPATH accordingly.
 Here is an example:
-    #!/usr/bin/env python3
-    import sys
-    sys.path.append('/home/myuser/Downloads/impsia_python_toolbox/src/')
-    from impsia.python_toolbox import logging_tools
-    from impsia.python_toolbox import subprocess_tools
-    from impsia.python_toolbox.subprocess_tools import SubprocessRunner
+
+	#!/usr/bin/env python3
+	import sys
+	sys.path.append('/home/myuser/Downloads/impsia_python_toolbox/src/')
+	from impsia.python_toolbox import logging_tools
+	from impsia.python_toolbox import subprocess_tools
+	from impsia.python_toolbox.subprocess_tools import SubprocessRunner
+
 You can also use a relative path in sys.path.append().
 
 ---
-_Side notes:
+_Side notes:_
 * The project intentionally uses the so called "src layout" for a cleaner an more explicit import handling as pointed out in https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
 	* Possible workaround for making the "import package" directly executable: https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#running-a-command-line-interface-from-source-with-src-layout
 * Currently the impsia_python_toolbox can only be installed in the described manual "ad hoc" manner. Distribution via PyPI as a fully fledged "distribution package" (with sdists and bdists) is not planned yet. 
 	* However you can currently build the "distribution package" yourself by running the following command in the "distribution root" (see below): `python3 -m build`
-_
 
 
-## How to run the unit tests, doctests an linters automatically ##
+## How to run the unit tests, doctests and linters automatically ##
 You first need to install the linters listed in tox.ini. The automated pip-installation via tox-dependencies is omitted because on OpenBSD python "distribution packages" are installed via OS-packages (via pkg_add) instead of via pip.
 
 After installation of required linters, in "distribution root" (see below) run: `tox`
 
 
-## How to run the unit tests and the single doctests manually ##
+## How to run the unit tests, linters and the single doctests manually ##
 See commands in tox.ini file. Examples:
 * In "distribution root" (see below) run: `python3 -m unittest discover -v -s tests`
 * In "distribution root" (see below) run: `python3 -m doctest -v src/impsia/python_toolbox/*.py`
@@ -41,6 +42,8 @@ See commands in tox.ini file. Examples:
 
 ## License and usage limitations ##
 The tools are free to use. No warranty or liability of any kind included. See license for details.
+Copyright 2025 Imperfect Silent Art
+SPDX-License-Identifier: Apache-2.0
 
 
 ## Terminology ##
