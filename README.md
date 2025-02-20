@@ -7,7 +7,7 @@ This is a personal collection of small python tools frequently or occasionally n
 ## Installation ##
 Supported platforms: OpenBSD. Not tested on Windows & Linux (yet).
 
-Just clone the git repo and import the modules by modifying your sys.path or environment variable PYTHONPATH accordingly.
+Just clone the git repo and import the modules by modifying your sys.path or your environment variable PYTHONPATH accordingly.
 Here is an example:
 
 	#!/usr/bin/env python3
@@ -42,8 +42,9 @@ See commands in tox.ini file. Examples:
 
 ## License and usage limitations ##
 The tools are free to use. No warranty or liability of any kind included. See license for details.
-Copyright 2025 Imperfect Silent Art
-SPDX-License-Identifier: Apache-2.0
+
+	Copyright 2025 Imperfect Silent Art
+	SPDX-License-Identifier: Apache-2.0
 
 
 ## Terminology ##
@@ -51,14 +52,14 @@ For uniformity and simplicity, all documentation will stick to the following ter
 
 * "import package" (or regular, simple package):
 	* e. g. folder impsia/python_toolbox/
-	* Directory containing a "__init__.py" file (and further python modules).
+	* Directory containing a "\__init\__.py" file (and further python modules).
 	* in accordance with the PyPA-terminology:
 		* https://packaging.python.org/en/latest/glossary/#term-Import-Package
 		* https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
 		* https://packaging.python.org/en/latest/tutorials/packaging-projects/
 
 * "namespace package"
-	* e. g. all "impsia" directories without "__init__.py" file
+	* e. g. all "impsia" directories without "\__init\__.py" file
 	* see: https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
 
 * "distribution root" directory (or "project root" directory)
