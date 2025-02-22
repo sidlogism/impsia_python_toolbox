@@ -17,7 +17,22 @@ Here is an example:
 	from impsia.python_toolbox import subprocess_tools
 	from impsia.python_toolbox.subprocess_tools import SubprocessRunner
 
-You can also use a relative path in sys.path.append().
+You can also use a relative path in sys.path.append():
+
+	import sys
+	sys.path.append('../../Downloads/impsia_python_toolbox/src/')
+	from impsia.python_toolbox import logging_tools
+	...
+
+or expansion-facilities for variables like os.path.expandvars() or os.path.expanduser():
+
+	import sys
+	import os
+	sys.path.append(os.path.expanduser('~/Downloads/impsia_python_toolbox/src/'))
+	from impsia.python_toolbox import logging_tools
+	...
+
+This also applies to the LOGCONFIG_RELATIVE_PATH that can be used in combination with logging_tools.py as seen in the corresponding unit test.
 
 ---
 _Side notes:_
@@ -35,9 +50,9 @@ After installation of required linters, in "distribution root" (see below) run: 
 
 ## How to run the unit tests, linters and the single doctests manually ##
 See commands in tox.ini file. Examples:
-* In "distribution root" (see below) run: `python3 -m unittest discover -v -s tests`
-* In "distribution root" (see below) run: `python3 -m doctest -v src/impsia/python_toolbox/*.py`
-* In "import package" (see below) directory run: `python3 -m doctest -v subprocess_tools.py`
+* In "distribution root" (see below) run: `python3 -Walways -m unittest discover -v -s tests`
+* In "distribution root" (see below) run: `python3 -Walways -m doctest -v src/impsia/python_toolbox/*.py`
+* In "import package" directory (see below) run: `python3 -Walways -m doctest -v subprocess_tools.py`
 
 
 ## License and usage limitations ##
@@ -52,14 +67,14 @@ For uniformity and simplicity, all documentation will stick to the following ter
 
 * "import package" (or regular, simple package):
 	* e. g. folder impsia/python_toolbox/
-	* Directory containing a "\__init\__.py" file (and further python modules).
+	* Directory containing a "\_\_init\_\_.py" file (and further python modules).
 	* in accordance with the PyPA-terminology:
 		* https://packaging.python.org/en/latest/glossary/#term-Import-Package
 		* https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
 		* https://packaging.python.org/en/latest/tutorials/packaging-projects/
 
 * "namespace package"
-	* e. g. all "impsia" directories without "\__init\__.py" file
+	* e. g. all "impsia" directories without "\__\init\_\_.py" file
 	* see: https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
 
 * "distribution root" directory (or "project root" directory)
