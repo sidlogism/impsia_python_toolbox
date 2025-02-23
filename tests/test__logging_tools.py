@@ -17,13 +17,13 @@ from src.impsia.python_toolbox import logging_tools    # pylint: disable=import-
 # For more details and possible workarounds see test__subprocess_tools.py.
 ########################################
 
-LOGFILE_ENCODING: str = 'UTF-8'
+_LOGFILE_ENCODING: str = 'UTF-8'
 # configure logger for this script
-LOGCONFIG_ENCODING: str = 'UTF-8'
-LOGCONFIG_RELATIVE_PATH: str = 'src/impsia/python_toolbox/logging_default_config.ini'
-logging.config.fileConfig(LOGCONFIG_RELATIVE_PATH, disable_existing_loggers=True, encoding=LOGCONFIG_ENCODING)
-LOGGER: Logger = logging.getLogger(__name__)
-LOGGER.setLevel(logging.INFO)
+_LOGCONFIG_ENCODING: str = 'UTF-8'
+_LOGCONFIG_RELATIVE_PATH: str = 'src/impsia/python_toolbox/logging_default_config.ini'
+logging.config.fileConfig(_LOGCONFIG_RELATIVE_PATH, disable_existing_loggers=True, encoding=_LOGCONFIG_ENCODING)
+_LOGGER: Logger = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.INFO)
 
 __all__: list[str] = ['TestLoggingTools']
 
@@ -38,7 +38,7 @@ class TestLoggingTools(unittest.TestCase):
 	def _compare_last_logline_with_expected_keywords(self, expected_keywords: str) -> None:
 		"""Compare the last line of the test-logfile with the given expected keywords and require both to be equal as unit test condition."""
 		expected_keywords_length: int = len(expected_keywords)
-		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=LOGFILE_ENCODING) as logfile:
+		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=_LOGFILE_ENCODING) as logfile:
 			# read all lines until EOF and get last line
 			lines: list[str] = logfile.read().splitlines()
 			last_line: str = lines[-1]
@@ -76,14 +76,14 @@ class TestLoggingTools(unittest.TestCase):
 	def test_logging_config(self) -> None:
 		"""Test logging-config in general."""
 		expected_keywords: str = 'gotcha! logging was successful!'
-		LOGGER.info(expected_keywords)
+		_LOGGER.info(expected_keywords)
 		# check the last line of printed log-text
 		self._compare_last_logline_with_expected_keywords(expected_keywords)
 
 	def test_logging_hierarchy(self) -> None:
 		"""Test logging hierarchy via child logger."""
 		expected_keywords: str = 'gotcha! logging via child logger was successful!'
-		child_logger = LOGGER.getChild('childlogger')
+		child_logger = _LOGGER.getChild('childlogger')
 		child_logger.info(expected_keywords)
 		# check the last line of printed log-text
 		self._compare_last_logline_with_expected_keywords(expected_keywords)

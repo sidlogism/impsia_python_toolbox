@@ -32,7 +32,7 @@ or expansion-facilities for variables like os.path.expandvars() or os.path.expan
 	from impsia.python_toolbox import logging_tools
 	...
 
-This also applies to the LOGCONFIG_RELATIVE_PATH that can be used in combination with logging_tools.py as seen in the corresponding unit test.
+This also applies to the \_LOGCONFIG_RELATIVE_PATH that can be used in combination with logging_tools.py as seen in the corresponding unit test.
 
 ---
 _Side notes:_
@@ -74,7 +74,7 @@ For uniformity and simplicity, all documentation will stick to the following ter
 		* https://packaging.python.org/en/latest/tutorials/packaging-projects/
 
 * "namespace package"
-	* e. g. all "impsia" directories without "\__\init\_\_.py" file
+	* e. g. all "impsia" directories without "\_\_init\_\_.py" file
 	* see: https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
 
 * "distribution root" directory (or "project root" directory)

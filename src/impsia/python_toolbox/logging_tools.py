@@ -20,7 +20,18 @@ LOGSEPARATOR_UNDERSCORE: str = 20 * '_'
 LOGSEPARATOR_HYPHEN: str = 20 * '-'
 LOGSEPARATOR_DOT: str = 20 * '.'
 
-DATEFORMAT_STARTING_TIME = '%H:%M:%S, %Y-%m-%d %A (%d %B %Y)'
+_DATEFORMAT_STARTING_TIME: str = '%H:%M:%S, %Y-%m-%d %A (%d %B %Y)'
+
+__all__: list[str] = [
+	'print_my_logwelcome',
+	'print_my_loggoodbye',
+	'LOGSEPARATOR_HASH',
+	'LOGSEPARATOR_EQUAL',
+	'LOGSEPARATOR_ASTERISK',
+	'LOGSEPARATOR_UNDERSCORE',
+	'LOGSEPARATOR_HYPHEN',
+	'LOGSEPARATOR_DOT'
+	]
 
 
 def _get_current_user_name() -> str:
@@ -63,7 +74,7 @@ def print_my_logwelcome(executing_script_basename: str, argv: list[str], start_t
 	logger.info(LOGSEPARATOR_HASH)
 	logger.info(f'Starting script "{executing_script_basename}" with arguments "{str(argv[1:])}".')
 	logger.info(f'Current user:"{str(_get_current_user_name())}" has administrator/superuser privileges:"{str(_current_user_has_admin_privileges())}".')
-	logger.info(f'Starting at: {start_time.strftime(DATEFORMAT_STARTING_TIME)}.')
+	logger.info(f'Starting at: {start_time.strftime(_DATEFORMAT_STARTING_TIME)}.')
 	if sys.stdin:
 		logger.info(f'sys.stdin.isatty():{str(sys.stdin.isatty())}')
 	logger.info(f'sys.stdout.isatty():{str(sys.stdout.isatty())}')
@@ -76,7 +87,7 @@ def print_my_loggoodbye(start_time: datetime) -> None:
 	logger: Logger = logging.getLogger(__name__)
 	logger.setLevel(logging.INFO)
 	logger.info(LOGSEPARATOR_UNDERSCORE)
-	logger.info(f'Finished script which startet at: {start_time.strftime(DATEFORMAT_STARTING_TIME)}.')
+	logger.info(f'Finished script which startet at: {start_time.strftime(_DATEFORMAT_STARTING_TIME)}.')
 	time_diff: timedelta = datetime.now() - start_time
 	logger.info(f'Full script runtime: {str(time_diff)}')
 	logger.info('For details see logfile which is usally located in the same directory as executed script.')
