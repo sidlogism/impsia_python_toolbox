@@ -19,9 +19,11 @@ if __name__ == "__main__":
 KEY_SUCCESSFUL_PROCESS = 'p_success'
 KEY_TIMEOUT_PROCESS = 'p_timeout'
 KEY_FAILED_PROCESS = 'p_fail'
-_ENFORCED_STREAM_ENCODING = 'UTF-8'
 # The os-names are the names used in os.name (which gives kind of a rough os-category)
-_TESTED_OPERATING_SYSTEMS = ['posix', 'nt']
+# _TESTED_OPERATING_SYSTEMS = ['posix', 'nt']
+_TESTED_OPERATING_SYSTEMS = ['posix']
+_LOGGER: Logger = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.NOTSET)
 
 __all__ = ['SubprocessRunner', 'KEY_SUCCESSFUL_PROCESS', 'KEY_FAILED_PROCESS', 'KEY_TIMEOUT_PROCESS']
 
@@ -31,11 +33,9 @@ class SubprocessRunner:
 
 	def __init__(self):
 		"""Initialize wrapper for running subprocesses by determining default stream encoding and checking current OS."""
-		logger: Logger = logging.getLogger(__name__)
-		logger.setLevel(logging.NOTSET)
 		self.pipe_encoding: str = self.get_pipes_default_encoding_name(sys.stdout, last_resort_encoding='UTF-8')
 		if 'cp850' == self.pipe_encoding:
-			logger.warning('Old Windows-encoding "cp850" is being used as your system default for pipes/streams (stdout etc.) and text files handles. '
+			_LOGGER.warning('Old Windows-encoding "cp850" is being used as your system default for pipes/streams (stdout etc.) and text files handles. '
 				'Consider using "UTF-8 mode" by setting environment variable PYTHONUTF8=1 or setting CLI option -Xutf8 (see PEP 540).')
 		# check whether current OS-category was explicitly tested before for using this class
 		os_was_tested: bool = False
@@ -44,7 +44,7 @@ class SubprocessRunner:
 				os_was_tested = True
 				break
 		if not os_was_tested:
-			logger.warning(f'OS-category "{os.name}" was not explicitly tested before for using this class.')
+			_LOGGER.warning(f'OS-category "{os.name}" was not explicitly tested before for using this class.')
 
 	def get_pipes_default_encoding_name(self, stream: TextIO, last_resort_encoding: str = 'UTF-8') -> str:
 		"""
@@ -52,19 +52,16 @@ class SubprocessRunner:
 
 		See also https://docs.python.org/3/library/os.html#utf8-mode and https://docs.python.org/3/library/sys.html#sys.stdout .
 		"""
-		logger: Logger = logging.getLogger(__name__)
-		logger.setLevel(logging.NOTSET)
-
 		if 'PYTHONIOENCODING' in os.environ:
-			logger.debug(f"ignoring environment variable 'PYTHONIOENCODING':{str(os.environ['PYTHONIOENCODING'])}")
+			_LOGGER.debug(f"ignoring environment variable 'PYTHONIOENCODING':{str(os.environ['PYTHONIOENCODING'])}")
 
 		encoding: Optional[str] = ''
 		if isinstance(stream, io.TextIOWrapper) and stream.encoding is not None:
 			encoding = stream.encoding
-			logger.debug(f'Using stream.encoding:{encoding}')
+			_LOGGER.debug(f'Using stream.encoding:{encoding}')
 			return encoding
 		if 'PYTHONUTF8' in os.environ and os.environ['PYTHONUTF8'] == 1:
-			logger.debug('environment variable "PYTHONUTF8" is 1 => defaulting to "UTF-8".')
+			_LOGGER.debug('environment variable "PYTHONUTF8" is 1 => defaulting to "UTF-8".')
 			return 'UTF-8'
 
 		locale.setlocale(locale.LC_ALL, '')
@@ -73,7 +70,7 @@ class SubprocessRunner:
 		except locale.Error:
 			pass
 		if encoding:
-			logger.debug(f'Using locale.getpreferredencoding(do_setlocale=False):{encoding}')
+			_LOGGER.debug(f'Using locale.getpreferredencoding(do_setlocale=False):{encoding}')
 			return encoding
 
 		try:
@@ -83,7 +80,7 @@ class SubprocessRunner:
 		except IndexError:
 			pass
 		if encoding:
-			logger.debug(f'Using locale.getlocale()[1]:{encoding}')
+			_LOGGER.debug(f'Using locale.getlocale()[1]:{encoding}')
 			return encoding
 
 		try:
@@ -91,12 +88,12 @@ class SubprocessRunner:
 		except OSError:
 			pass
 		if encoding:
-			logger.debug(f'Using sys.getfilesystemencoding():{encoding}')
+			_LOGGER.debug(f'Using sys.getfilesystemencoding():{encoding}')
 			return encoding
 
 		if encoding is None or len(encoding) == 0:
 			encoding = last_resort_encoding
-			logger.debug(f'Resorted to last resort encoding {encoding}')
+			_LOGGER.debug(f'Resorted to last resort encoding {encoding}')
 		return encoding
 
 	def run_commandline(
@@ -117,14 +114,12 @@ class SubprocessRunner:
 		>>> stdout_value
 		'gotcha! echo was successful!'
 		"""
-		logger: Logger = logging.getLogger(__name__)
-		logger.setLevel(logging.NOTSET)
 		for arg in commandline_args:
 			if arg.strip() == '-':
-				logger.warning('One of the given commandline arguments is "-". Reading from STDIN is not supported by this class!')
+				_LOGGER.warning('One of the given commandline arguments is "-". Reading from STDIN is not supported by this class!')
 
 		if timeout is None and not suppress_missing_timeout_warning:
-			logger.warning(
+			_LOGGER.warning(
 				'Missing optional timeout-argument. Toolbox-user (programmer) didn\'t provide a timeout for running this new subprocess.'
 				'Thus a hanging subprocess cannot be detected and may run eternally.'
 				)
@@ -145,7 +140,7 @@ class SubprocessRunner:
 				commandline_args,
 				capture_output=True,
 				check=True,
-				encoding=_ENFORCED_STREAM_ENCODING,
+				encoding=self.pipe_encoding,
 				timeout=timeout
 				)
 			results[KEY_SUCCESSFUL_PROCESS] = process_data
