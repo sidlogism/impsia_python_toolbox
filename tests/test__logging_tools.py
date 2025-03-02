@@ -23,7 +23,7 @@ _LOGCONFIG_ENCODING: str = 'UTF-8'
 _LOGCONFIG_RELATIVE_PATH: str = 'src/impsia/python_toolbox/logging_default_config.ini'
 logging.config.fileConfig(_LOGCONFIG_RELATIVE_PATH, disable_existing_loggers=True, encoding=_LOGCONFIG_ENCODING)
 _LOGGER: Logger = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.INFO)
+_LOGGER.setLevel(logging.NOTSET)
 
 __all__: list[str] = ['TestLoggingTools']
 
@@ -34,6 +34,10 @@ class TestLoggingTools(unittest.TestCase):
 	def setUp(self) -> None:
 		# get script starting time for logwelcome/loggoodbye
 		self.start_time: datetime = datetime.now()
+		# check precondition for tests: global root loglevel must be at least INFO or below:
+		root_loglevel: int = _LOGGER.getEffectiveLevel()
+		if root_loglevel > logging.INFO:
+			self.fail(f'Global root log level {root_loglevel} is set too high. Set it to {logging.INFO} or below.')
 
 	def _compare_last_logline_with_expected_keywords(self, expected_keywords: str) -> None:
 		"""Compare the last line of the test-logfile with the given expected keywords and require both to be equal as unit test condition."""

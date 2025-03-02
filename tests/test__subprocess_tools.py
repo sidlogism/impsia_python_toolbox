@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit test cases for testing the subprocess tools and subproces sutilities of impsia_python_toolbox."""
 
+import sys
 import unittest
 import logging
 import subprocess
@@ -24,7 +25,7 @@ from src.impsia.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, K
 # flake8 E402 module level import not at top of file
 ########################################
 _LOGGER: Logger = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.INFO)
+_LOGGER.setLevel(logging.NOTSET)
 
 __all__: list[str] = ['TestSubprocessRunner']
 
@@ -75,6 +76,19 @@ class TestSubprocessRunner(unittest.TestCase):
 		self.assertEqual(error_data.returncode, 1, 'The resulting error-object contains unexpected return code.')
 		self.assertEqual(error_data.cmd, commandline_args, 'The resulting error-object contains different commandline arguments.')
 		_LOGGER.info(f'error info: {error_data}')
+
+	def test_get_pipes_default_encoding_name(self) -> None:
+		"""Test SubprocessRunner.run_commandline with crashing cat-command and force error."""
+		runner: SubprocessRunner = SubprocessRunner()
+		pipe_encoding: str = runner.get_pipes_default_encoding_name(sys.stdout, last_resort_encoding='UTF-8')
+		# check writing to stdout using the determined encoding
+		test_text: str = 'Successfully tested stdout encoding.'
+		test_text.encode(pipe_encoding, 'backslashreplace')
+		try:
+			sys.stdout.write(test_text)
+		except UnicodeEncodeError:
+			self.fail(f'The determined encoding "{pipe_encoding}" for pipes/streams (stdout etc.) and text files handles '
+				'causes encoding exception when used with stdout.')
 
 
 if __name__ == '__main__':
