@@ -145,9 +145,9 @@ class SubprocessRunner:
 				)
 			results[KEY_SUCCESSFUL_PROCESS] = process_data
 			return results
-		except TimeoutExpired as e:
-			results[KEY_TIMEOUT_PROCESS] = e
+		except TimeoutExpired as err:
+			results[KEY_TIMEOUT_PROCESS] = err
 			return results
-		except CalledProcessError as e:
-			results[KEY_FAILED_PROCESS] = e
+		except CalledProcessError as err:
+			results[KEY_FAILED_PROCESS] = err
 			return results
