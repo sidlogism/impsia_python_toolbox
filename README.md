@@ -34,6 +34,17 @@ or expansion-facilities for variables like os.path.expandvars() or os.path.expan
 
 This also applies to the \_LOGCONFIG_RELATIVE_PATH that can be used in combination with logging_tools.py as seen in the corresponding unit test.
 
+If you are using linters like mypy or pylint, you might have to add check-ignores like the following in order to ignore false-positive linter-errors not recognizing sys.path.append() used for imports:
+
+	#!/usr/bin/env python3
+	# mypy: disable-error-code="import-not-found"
+	import sys
+	sys.path.append('/home/myuser/Downloads/impsia_python_toolbox/src/')
+	from impsia.python_toolbox import logging_tools    # pylint: disable=import-error,wrong-import-position,no-name-in-module
+	from impsia.python_toolbox import subprocess_tools    # pylint: disable=import-error,wrong-import-position,no-name-in-module
+	from impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pylint: disable=import-error,wrong-import-position,no-name-in-module
+
+
 ---
 _Side notes:_
 * The project intentionally uses the so called "src layout" for a cleaner an more explicit import handling as pointed out in https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
@@ -45,7 +56,8 @@ _Side notes:_
 ## How to run the unit tests, doctests and linters automatically ##
 You first need to install the linters listed in tox.ini. The automated pip-installation via tox-dependencies is omitted because on OpenBSD python "distribution packages" are installed via OS-packages (via pkg_add) instead of via pip.
 
-After installation of required linters, in "distribution root" (see below) run: `tox`
+After installation of required linters, in "distribution root" (see definition below) run: `tox`
+You can also run the `tox`-command in any subdirectory of "distribution root" (see definition below).
 
 
 ## How to run the unit tests, linters and the single doctests manually ##

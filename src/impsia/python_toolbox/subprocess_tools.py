@@ -129,7 +129,7 @@ class SubprocessRunner:
 		results[KEY_FAILED_PROCESS] = None
 		try:
 			########################################
-			# We could use subprocess.popen instead of subprocess.run for a more fine-grained control over streams, timeouts and corner cases.
+			# We could use subprocess.popen instead of subprocess.run for a more fine-grained control over pipes, timeouts and corner cases.
 			# By using subprocess.popen a hanging subprocess or corner cases like 'cat -' could be detected reliably.
 			#
 			# But for simple scripting use cases doing so would be breaking a butterfly on an wheel.
@@ -138,10 +138,12 @@ class SubprocessRunner:
 			########################################
 			process_data: subprocess.CompletedProcess = subprocess.run(
 				commandline_args,
-				capture_output=True,
 				check=True,
+				timeout=timeout,
+				# settings for capturing and encoding stdout and stderr
+				capture_output=True,
 				encoding=self.pipe_encoding,
-				timeout=timeout
+				errors='xmlcharrefreplace'
 				)
 			results[KEY_SUCCESSFUL_PROCESS] = process_data
 			return results
