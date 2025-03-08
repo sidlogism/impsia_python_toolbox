@@ -9,13 +9,9 @@ import logging
 import logging.config
 from logging import Logger
 from datetime import datetime
-from src.impsia.python_toolbox import logging_tools    # pylint: disable=import-error
-########################################
-# The above import statement is fine by most linters except for pylint, which throws the following error:
-# E0401: Unable to import 'src.impsia.python_toolbox' (import-error)
-#
-# For more details and possible workarounds see test__subprocess_tools.py.
-########################################
+sys.path.append('src/')
+from impsia.python_toolbox import logging_tools    # pylint: disable=wrong-import-position # noqa: E402
+
 
 _LOGFILE_ENCODING: str = 'UTF-8'
 # configure logger for this script

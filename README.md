@@ -34,7 +34,33 @@ or expansion-facilities for variables like os.path.expandvars() or os.path.expan
 
 This also applies to the \_LOGCONFIG_RELATIVE_PATH that can be used in combination with logging_tools.py as seen in the corresponding unit test.
 
-If you are using linters like mypy or pylint, you might have to add check-ignores like the following in order to ignore false-positive linter-errors not recognizing sys.path.append() used for imports:
+In order to avoid false-positive linter-errors caused by the import-discovery mechanisms of these linters not recognizing sys.path.append(), you have to set the environment variables `MYPYPATH` and `PYTHONPATH` (the latter for pylint). Example on unix-like operating systems:
+
+	# for python linter pylint:
+	export PYTHONPATH="/home/myuser/Downloads/impsia_python_toolbox/src/"
+	# for python linter mypy:
+	export MYPYPATH="/home/myuser/Downloads/impsia_python_toolbox/src/"
+
+**The used paths should be absolute paths (`../` was not tested, `~` as a shortcut for the user's home-dir is NOT supported in the environment variables neither by mypy nor by pylint). Please keep in mind that if your IDE (e. g. VScode or PyCharm) uses internal linters, these linters must be made aware of the base paths for import-discovery as well.**
+For pylint, you still have to add the check-ignore comment `# pylint: disable=wrong-import-position # noqa: E402` after every import statement placed behind sys.path.append():
+
+	#!/usr/bin/env python3
+	import sys
+	sys.path.append('/home/myuser/Downloads/impsia_python_toolbox/src/')
+	from impsia.python_toolbox import logging_tools    # pylint: disable=wrong-import-position # noqa: E402
+	from impsia.python_toolbox import subprocess_tools    # pylint: disable=wrong-import-position # noqa: E402
+	from impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pylint: disable=wrong-import-position # noqa: E402
+
+* comment `# pylint: disable=wrong-import-position` is needed for pylint to ignore the error `C0413: Import "..." should be placed at the top of the module (wrong-import-position)`
+* comment `# noqa: E402` is needed for flake8 to ignore the error `E402 module level import not at top of file`
+
+Instead of using the mentioned environment variables you could also resort to the below `mypy_path` config variable or to the `init-hook` config variable in pylint. But we are avoiding these config variables for two reasons. First, by placing hard-coded paths into the config files, we must always take care about not to accidentally committing these paths to git.
+Second, for an unknown reason the `mypy_path` config variable is being ignored in `tox.ini`:
+
+	[mypy]
+	mypy_path = /home/myuser/Downloads/impsia_python_toolbox/src/
+
+Alternatively, instead of enabling import-discovery for the linters, you could simply add check-ignores like the following in order to simply ignore all false-positive linter-errors related to import-discovery:
 
 	#!/usr/bin/env python3
 	# mypy: disable-error-code="import-not-found"

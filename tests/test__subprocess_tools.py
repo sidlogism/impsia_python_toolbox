@@ -7,23 +7,12 @@ import logging
 import subprocess
 from logging import Logger
 from typing import Any
-from src.impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pylint: disable=import-error
-from src.impsia.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, KEY_FAILED_PROCESS, KEY_TIMEOUT_PROCESS  # pylint: disable=import-error
-########################################
-# The above import statement is fine by most linters except for pylint, which throws the following error:
-# E0401: Unable to import 'src.impsia.python_toolbox.subprocess_tools' (import-error)
-#
-# The following import construct is a possible workaround for pylint--error:
-# import sys
-# sys.path.append('src/')
-# from impsia.python_toolbox.subprocess_tools import SubprocessRunner
-#
-# But this import-construct raises more problems.
-# - it's not supported by mypy (import-not-found)
-# - it causes another positioning-error in pylint and flake8 (because of the sys.path.append()-statement):
-# pylint C0413: Import "from impsia.p... import SubprocessRunner" should be placed at the top of the module (wrong-import-position)
-# flake8 E402 module level import not at top of file
-########################################
+sys.path.append('src/')
+from impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pylint: disable=wrong-import-position # noqa: E402
+from impsia.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, KEY_FAILED_PROCESS    # pylint: disable=wrong-import-position # noqa: E402
+from impsia.python_toolbox.subprocess_tools import KEY_TIMEOUT_PROCESS    # pylint: disable=wrong-import-position # noqa: E402
+
+
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
 
