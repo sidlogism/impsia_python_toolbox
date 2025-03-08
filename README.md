@@ -34,6 +34,8 @@ or expansion-facilities for variables like os.path.expandvars() or os.path.expan
 
 This also applies to the \_LOGCONFIG_RELATIVE_PATH that can be used in combination with logging_tools.py as seen in the corresponding unit test.
 
+
+
 In order to avoid false-positive linter-errors caused by the import-discovery mechanisms of these linters not recognizing sys.path.append(), you have to set the environment variables `MYPYPATH` and `PYTHONPATH` (the latter for pylint). Example on unix-like operating systems:
 
 	# for python linter pylint:
@@ -41,7 +43,7 @@ In order to avoid false-positive linter-errors caused by the import-discovery me
 	# for python linter mypy:
 	export MYPYPATH="/home/myuser/Downloads/impsia_python_toolbox/src/"
 
-**The used paths should be absolute paths (`../` was not tested, `~` as a shortcut for the user's home-dir is NOT supported in the environment variables neither by mypy nor by pylint). Please keep in mind that if your IDE (e. g. VScode or PyCharm) uses internal linters, these linters must be made aware of the base paths for import-discovery as well.**
+**The used paths for the environment variables should be absolute paths since the relative `../` was not tested yet and `~` as a shortcut for the user's home-dir is NOT supported in the environment variables, neither by mypy nor by pylint. Please keep in mind that if your IDE (e. g. VScode or PyCharm) uses internal linters, these linters must be made aware of the base paths for import-discovery as well.**
 For pylint, you still have to add the check-ignore comment `# pylint: disable=wrong-import-position # noqa: E402` after every import statement placed behind sys.path.append():
 
 	#!/usr/bin/env python3
@@ -80,14 +82,18 @@ _Side notes:_
 
 
 ## How to run the unit tests, doctests and linters automatically ##
-You first need to install the linters listed in tox.ini. The automated pip-installation via tox-dependencies is omitted because on OpenBSD python "distribution packages" are installed via OS-packages (via pkg_add) instead of via pip.
 
-After installation of required linters, in "distribution root" (see definition below) run: `tox`
-You can also run the `tox`-command in any subdirectory of "distribution root" (see definition below).
+* You first need to install the linters listed in tox.ini. The automated pip-installation via tox-dependencies is omitted because on OpenBSD python "distribution packages" are installed via OS-packages (via pkg_add) instead of via pip.
+* After installation of required linters, set the environment variables `PYTHONPATH` and `MYPYPATH` for import-discovery (see above and `tox.ini` for more details).
+* Finally, in "distribution root" (see definition below) run: `tox`
+	* You can also run the `tox`-command in any subdirectory of "distribution root" (see definition below).
 
 
 ## How to run the unit tests, linters and the single doctests manually ##
-See commands in tox.ini file. Examples:
+* First set the environment variables `PYTHONPATH` and `MYPYPATH` for import-discovery (see above and `tox.ini` for more details).
+* Second, run linter command or test command. **See commands in tox.ini file for examples.**
+
+Examples:
 * In "distribution root" (see below) run: `python3 -Walways -m unittest discover -v -s tests`
 * In "distribution root" (see below) run: `python3 -Walways -m doctest -v src/impsia/python_toolbox/*.py`
 * In "import package" directory (see below) run: `python3 -Walways -m doctest -v subprocess_tools.py`
