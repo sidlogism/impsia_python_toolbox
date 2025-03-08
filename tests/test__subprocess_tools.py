@@ -7,10 +7,8 @@ import logging
 import subprocess
 from logging import Logger
 from typing import Any
-sys.path.append('src/')
-from impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pylint: disable=wrong-import-position # noqa: E402
-from impsia.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, KEY_FAILED_PROCESS    # pylint: disable=wrong-import-position # noqa: E402
-from impsia.python_toolbox.subprocess_tools import KEY_TIMEOUT_PROCESS    # pylint: disable=wrong-import-position # noqa: E402
+from impsia.python_toolbox.subprocess_tools import SubprocessRunner
+from impsia.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, KEY_FAILED_PROCESS, KEY_TIMEOUT_PROCESS
 
 
 _LOGGER: Logger = logging.getLogger(__name__)

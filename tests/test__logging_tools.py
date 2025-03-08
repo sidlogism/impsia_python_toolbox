@@ -9,8 +9,7 @@ import logging
 import logging.config
 from logging import Logger
 from datetime import datetime
-sys.path.append('src/')
-from impsia.python_toolbox import logging_tools    # pylint: disable=wrong-import-position # noqa: E402
+from impsia.python_toolbox import logging_tools
 
 
 _LOGFILE_ENCODING: str = 'UTF-8'
