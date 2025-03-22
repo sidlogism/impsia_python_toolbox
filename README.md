@@ -10,7 +10,7 @@ Supported platforms: OpenBSD. Not tested on Windows & Linux (yet).
 Just clone the git repo and import the modules by modifying your sys.path or your environment variable `PYTHONPATH` accordingly.
 **We recommend using `PYTHONPATH` and `MYPYPATH`. see "Setting environment variables" and "Setting sys.path" below.**
 ### Setting environment variables ###
-In order to avoid false-positive linter-errors caused by the import-discovery mechanisms of these linters not recognizing sys.path.append(), you have to set the environment variables `MYPYPATH` and `PYTHONPATH` (the latter for pylint).  You also need to set `PYTHONPATH`, if you want to avoid using sys.path.append() in your python scripts or unit tests.
+In order to avoid false-positive linter-errors caused by the import-discovery mechanisms of these linters not recognizing sys.path.append(), you have to set the environment variables `MYPYPATH` and `PYTHONPATH` (the latter for pylint).  **You also need to set `PYTHONPATH` if you want to avoid using sys.path.append() in your python scripts or unit tests altogether.**
 
 Example on unix-like operating systems:
 
@@ -66,7 +66,7 @@ Instead of enabling import-discovery for the linters with the environment variab
 	from impsia.python_toolbox.subprocess_tools import SubprocessRunner    # pylint: disable=import-error,wrong-import-position,no-name-in-module
 
 
-But even if you are using the above environment variables, for pylint, you still have to add the check-ignore comment `# pylint: disable=wrong-import-position # noqa: E402` after every import statement placed behind sys.path.append():
+But even if you are using the above environment variables, for pylint and flake8, you still have to add the check-ignore comment `# pylint: disable=wrong-import-position # noqa: E402` after every import statement placed behind sys.path.append():
 
 	#!/usr/bin/env python3
 	import sys

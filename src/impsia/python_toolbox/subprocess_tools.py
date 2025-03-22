@@ -143,7 +143,7 @@ class SubprocessRunner:
 				# settings for capturing and encoding stdout and stderr
 				capture_output=True,
 				encoding=self.pipe_encoding,
-				errors='xmlcharrefreplace'
+				errors='namereplace'
 				)
 			results[KEY_SUCCESSFUL_PROCESS] = process_data
 			return results
