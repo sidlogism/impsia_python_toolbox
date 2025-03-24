@@ -101,30 +101,68 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 	Sanitize given path from user input by checking whether path exists and attributes are as expected or whether path contains undesired characters.
 
 	Throwing exception if path doesn't exist, doesn't have expected attributes (type and access permissions) or if path contains undesired characters.
+
+	Mind the "mustbe"-flags and "maybe"-flags! Per default they are all set to False, which simply disqualifies all paths!
+	Thus you must set the suitable "mustbe"-flags and "maybe"-flags for your use case to True!
+	If a "mustbe"-flag is True, the corresponding "maybe"-flag will be automatically set to True.
+
+	This function is only considering symlinks, directories and files. Fifos and special device files etc. are not supported!
 	"""
 	# maybe_suid_executable=False
 	########################################
-	# Only considering symlinks, dirs and files (no fifos etc.) !
-	#
 	# possible test paths:
+	#
 	# C:\Program Files\Common Files
 	# \;\&\'"#$%C:\Program Files\Common Files/~/foo-bar_baz/1234567890\u00c4\u00d6\u00dc\u00df\u00e4\u00f6\u00fc.txt"
 	# + umlauts
 	# ~/Arbeitsflaeche/
 	# /usr/bin/apt-get
 	########################################
-	if not maybe_symlink and not maybe_directory and not maybe_file:
-		raise UsageError('Wrong parametrization of function. Path must be allowed to be at least one category out of symlinks, dirs or files.')
+
 	########################################
-	# (A => B) equal to: (not A or B)
-	# if A is true, B MUST be true !
-	# mustbe_X => maybe_X !!
+	# Check that flag logic is correctly used and infer correct values of "maybe"-flags:
+	# If a "mustbe"-flag is True, the corresponding "maybe"-flag will be automatically set to True.
 	########################################
+	if mustbe_file:
+		maybe_file = True
+		if mustbe_symlink or mustbe_directory:
+			raise UsageError(
+				'Wrong parametrization of function. '
+				'The item identified by a path can only be enforced to be one single category at a time out of the following three categories: '
+				'symlink or directory or file.')
+	if mustbe_directory:
+		maybe_directory = True
+		if mustbe_symlink or mustbe_file:
+			raise UsageError(
+				'Wrong parametrization of function. '
+				'The item identified by a path can only be enforced to be one single category at a time out of the following three categories: '
+				'symlink or directory or file.')
+	if mustbe_symlink:
+		maybe_symlink = True
+		if mustbe_directory or mustbe_file:
+			raise UsageError(
+				'Wrong parametrization of function. '
+				'The item identified by a path can only be enforced to be one single category at a time out of the following three categories: '
+				'symlink or directory or file.')
+	if mustbe_readable:
+		maybe_readable = True
+	if mustbe_writable:
+		maybe_writable = True
+	if mustbe_executable:
+		maybe_executable = True
+	# safety check in hindsight:
+	#     "mustbe"-flag A is True => corresponding "maybe"-flag B must be True
+	#     mustbe_X => maybe_X
+	#     if A is true, B MUST be true
+	# The boolean statement (A => B) is equal to (not A or B):
+	assert (not mustbe_file or maybe_file)
 	assert (not mustbe_directory or maybe_directory)
 	assert (not mustbe_symlink or maybe_symlink)
 	assert (not mustbe_readable or maybe_readable)
 	assert (not mustbe_writable or maybe_writable)
 	assert (not mustbe_executable or maybe_executable)
+	if not maybe_symlink and not maybe_directory and not maybe_file:
+		raise UsageError('Wrong parametrization of function. Path must be allowed to be at least one category out of symlinks, directories or files.')
 
 	whitelist: str = r'\w'  # UNICODE word characters (see python doc of module "re").
 	whitelist += r'\. \-_'  # valid directoryname of filename components (space too, though deprecated , but NOT other whitespace !!)
