@@ -15,20 +15,21 @@ _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
 
 
-ERRNO_SUCCESS = 0
+ERRNO_SUCCESS: int = 0
 try:
 	# Not all os.EX_... errnos are available on Windows => accessing them might throw an exception on Windows
 	ERRNO_SUCCESS = os.EX_OK
 except AttributeError:
 	pass
 
-ERRNO_UNKNOWN = 1
+ERRNO_UNKNOWN: int = 1
 try:
 	# Not all os.EX_... errnos are available on Windows => accessing them might throw an exception on Windows
 	ERRNO_UNKNOWN = os.EX_SOFTWARE
 except AttributeError:
 	pass
-__all__ = ['ERRNO_SUCCESS', 'ERRNO_UNKNOWN', 'ImpsiaError', 'UsageError', 'strip_fileextension', 'sanitize_input_string', 'sanitize_userinput_path']
+__all__: list[str] = ['ERRNO_SUCCESS', 'ERRNO_UNKNOWN', 'ImpsiaError', 'UsageError',
+	'strip_fileextension', 'sanitize_input_string', 'sanitize_userinput_path']
 
 
 class ImpsiaError(Exception):
@@ -204,10 +205,10 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 		path[0] in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
 		path += os.sep
 		_LOGGER.warning(f'We are operating on windows operating system and your path {path} is a bare drive letter. '
-						'Some command line interpreters on windows resolve such a path to the last CWD used on that windows-drive '
-						'(instead of the ROOT directory of that window-drive). '
-						'Thus we append the directory separator symbol behind your path to explicitly tell any windows-CLI-interpreter '
-						'to access the ROOT directory of that window-drive.')
+			'Some command line interpreters on windows resolve such a path to the last CWD used on that windows-drive '
+			'(instead of the ROOT directory of that window-drive). '
+			'Thus we append the directory separator symbol behind your path to explicitly tell any windows-CLI-interpreter '
+			'to access the ROOT directory of that window-drive.')
 
 	########################################
 	# check if path exists

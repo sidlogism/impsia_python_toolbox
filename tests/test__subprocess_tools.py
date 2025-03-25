@@ -25,11 +25,15 @@ class TestSubprocessRunner(unittest.TestCase):
 		runner: SubprocessRunner = SubprocessRunner()
 		commandline_args = ['echo', f'"{echo_text}"']
 		results: dict[str, Any] = runner.run_commandline(commandline_args, suppress_missing_timeout_warning=False)
-		self.assertIsNone(results[KEY_TIMEOUT_PROCESS], 'The executed subprocess ran into a timeout unexpectedly.')
-		self.assertIsNone(results[KEY_FAILED_PROCESS], 'The executed subprocess failed unexpectedly.')
+		self.assertNotIn(KEY_TIMEOUT_PROCESS, results, 'The executed subprocess ran into a timeout unexpectedly.')
+		self.assertNotIn(KEY_FAILED_PROCESS, results, 'The executed subprocess failed unexpectedly.')
+		if KEY_SUCCESSFUL_PROCESS not in results:
+			self.fail('The executed subprocess didn\'t finish successfully as expected.')
 		process_data: subprocess.CompletedProcess = results[KEY_SUCCESSFUL_PROCESS]
 		self.assertIsNotNone(process_data, 'The executed subprocess yielded output None instead of the expected process-object.')
 		self.assertIsInstance(process_data, subprocess.CompletedProcess, 'The executed subprocess didn\'t yield a process-object as expected.')
+		self.assertEqual(process_data.returncode, 0, 'The resulting process-object contains unexpected return code.')
+		self.assertEqual(process_data.args, commandline_args, 'The resulting process-object contains different commandline arguments.')
 		stdout_value: str = process_data.stdout
 		stdout_value = stdout_value.strip().strip('"')
 		self.assertEqual(stdout_value, echo_text,
@@ -41,8 +45,10 @@ class TestSubprocessRunner(unittest.TestCase):
 		test_timeout_seconds = 1
 		commandline_args = ['cat', '-']
 		results: dict[str, Any] = runner.run_commandline(commandline_args, timeout=test_timeout_seconds)
-		self.assertIsNone(results[KEY_SUCCESSFUL_PROCESS], 'The executed subprocess unexpectedly finished successful without timeout.')
-		self.assertIsNone(results[KEY_FAILED_PROCESS], 'The executed subprocess failed unexpectedly.')
+		self.assertNotIn(KEY_SUCCESSFUL_PROCESS, results, 'The executed subprocess unexpectedly finished successful without timeout.')
+		self.assertNotIn(KEY_FAILED_PROCESS, results, 'The executed subprocess failed unexpectedly.')
+		if KEY_TIMEOUT_PROCESS not in results:
+			self.fail('The executed subprocess didn\'t run into a timeout as expected.')
 		timeout_data: subprocess.TimeoutExpired = results[KEY_TIMEOUT_PROCESS]
 		self.assertIsNotNone(timeout_data, 'The executed subprocess yielded output None instead of the expected timeout-object.')
 		self.assertIsInstance(timeout_data, subprocess.TimeoutExpired, 'The executed subprocess didn\'t yield a timeout-object as expected.')
@@ -55,14 +61,17 @@ class TestSubprocessRunner(unittest.TestCase):
 		runner: SubprocessRunner = SubprocessRunner()
 		commandline_args = ['cat', 'nonExistingFileForTest001.txt']
 		results: dict[str, Any] = runner.run_commandline(commandline_args, suppress_missing_timeout_warning=True)
-		self.assertIsNone(results[KEY_SUCCESSFUL_PROCESS], 'The executed subprocess unexpectedly finished successful without error.')
-		self.assertIsNone(results[KEY_TIMEOUT_PROCESS], 'The executed subprocess ran into a timeout unexpectedly.')
+		self.assertNotIn(KEY_SUCCESSFUL_PROCESS, results, 'The executed subprocess unexpectedly finished successful without error.')
+		self.assertNotIn(KEY_TIMEOUT_PROCESS, results, 'The executed subprocess ran into a timeout unexpectedly.')
+		if KEY_FAILED_PROCESS not in results:
+			self.fail('The executed subprocess didn\'t run into an error as expected.')
 		error_data: subprocess.CalledProcessError = results[KEY_FAILED_PROCESS]
 		self.assertIsNotNone(error_data, 'The executed subprocess yielded output None instead of the expected error-object.')
 		self.assertIsInstance(error_data, subprocess.CalledProcessError, 'The executed subprocess didn\'t yield a error-object as expected.')
 		self.assertEqual(error_data.returncode, 1, 'The resulting error-object contains unexpected return code.')
 		self.assertEqual(error_data.cmd, commandline_args, 'The resulting error-object contains different commandline arguments.')
-		_LOGGER.info(f'error info: {error_data}')
+		_LOGGER.info(f'error object: {error_data}')
+		_LOGGER.info(f'error return code: {error_data.returncode}; stderr: "{error_data.stderr}"')
 
 	def test_get_pipes_default_encoding_name(self) -> None:
 		"""Test SubprocessRunner.run_commandline with crashing cat-command and force error."""

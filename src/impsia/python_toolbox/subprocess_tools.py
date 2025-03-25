@@ -16,16 +16,16 @@ if __name__ == "__main__":
 	sys.exit(os.EX_USAGE)
 
 
-KEY_SUCCESSFUL_PROCESS = 'p_success'
-KEY_TIMEOUT_PROCESS = 'p_timeout'
-KEY_FAILED_PROCESS = 'p_fail'
+KEY_SUCCESSFUL_PROCESS: str = 'p_success'
+KEY_TIMEOUT_PROCESS: str = 'p_timeout'
+KEY_FAILED_PROCESS: str = 'p_fail'
 # The os-names are the names used in os.name (which gives kind of a rough os-category)
 # _TESTED_OPERATING_SYSTEMS = ['posix', 'nt']
-_TESTED_OPERATING_SYSTEMS = ['posix']
+_TESTED_OPERATING_SYSTEMS: list[str] = ['posix']
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
 
-__all__ = ['SubprocessRunner', 'KEY_SUCCESSFUL_PROCESS', 'KEY_FAILED_PROCESS', 'KEY_TIMEOUT_PROCESS']
+__all__: list[str] = ['SubprocessRunner', 'KEY_SUCCESSFUL_PROCESS', 'KEY_FAILED_PROCESS', 'KEY_TIMEOUT_PROCESS']
 
 
 class SubprocessRunner:
@@ -124,9 +124,6 @@ class SubprocessRunner:
 				'Thus a hanging subprocess cannot be detected and may run eternally.'
 				)
 		results: dict[str, Any] = {}
-		results[KEY_SUCCESSFUL_PROCESS] = None
-		results[KEY_TIMEOUT_PROCESS] = None
-		results[KEY_FAILED_PROCESS] = None
 		try:
 			########################################
 			# We could use subprocess.popen instead of subprocess.run for a more fine-grained control over pipes, timeouts and corner cases.
