@@ -101,13 +101,14 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 	"""
 	Sanitize given path from user input by checking whether path exists and attributes are as expected or whether path contains undesired characters.
 
-	Throwing exception if path doesn't exist, doesn't have expected attributes (type and access permissions) or if path contains undesired characters.
-
 	Mind the "mustbe"-flags and "maybe"-flags! Per default they are all set to False, which simply disqualifies all paths!
 	Thus you must set the suitable "mustbe"-flags and "maybe"-flags for your use case to True!
 	If a "mustbe"-flag is True, the corresponding "maybe"-flag will be automatically set to True.
 
 	This function is only considering symlinks, directories and files. Fifos and special device files etc. are not supported!
+
+	Raises:
+		UsageError: if path doesn't exist, doesn't have expected attributes (type and access permissions) or if path contains undesired characters.
 	"""
 	# maybe_suid_executable=False
 	########################################

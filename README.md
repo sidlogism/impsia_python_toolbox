@@ -8,7 +8,7 @@ This is a personal collection of small python tools frequently or occasionally n
 Supported platforms: OpenBSD. Not tested on Windows & Linux (yet).
 
 Just clone the git repo and import the modules by modifying your sys.path or your environment variable `PYTHONPATH` accordingly.
-**We recommend using `PYTHONPATH` and `MYPYPATH`. see "Setting environment variables" and "Setting sys.path" below.**
+**We recommend using `PYTHONPATH` and `MYPYPATH`. See "Setting environment variables" and "Setting sys.path" below.**
 ### Setting environment variables ###
 In order to avoid false-positive linter-errors caused by the import-discovery mechanisms of these linters not recognizing sys.path.append(), you have to set the environment variables `MYPYPATH` and `PYTHONPATH` (the latter for pylint).  **You also need to set `PYTHONPATH` if you want to avoid using sys.path.append() in your python scripts or unit tests altogether.**
 

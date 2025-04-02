@@ -29,12 +29,12 @@ class TestSubprocessRunner(unittest.TestCase):
 		self.assertNotIn(KEY_FAILED_PROCESS, results, 'The executed subprocess failed unexpectedly.')
 		if KEY_SUCCESSFUL_PROCESS not in results:
 			self.fail('The executed subprocess didn\'t finish successfully as expected.')
-		process_data: subprocess.CompletedProcess = results[KEY_SUCCESSFUL_PROCESS]
-		self.assertIsNotNone(process_data, 'The executed subprocess yielded output None instead of the expected process-object.')
-		self.assertIsInstance(process_data, subprocess.CompletedProcess, 'The executed subprocess didn\'t yield a process-object as expected.')
-		self.assertEqual(process_data.returncode, 0, 'The resulting process-object contains unexpected return code.')
-		self.assertEqual(process_data.args, commandline_args, 'The resulting process-object contains different commandline arguments.')
-		stdout_value: str = process_data.stdout
+		subprocess_metadata: subprocess.CompletedProcess = results[KEY_SUCCESSFUL_PROCESS]
+		self.assertIsNotNone(subprocess_metadata, 'The executed subprocess yielded output None instead of the expected process-object.')
+		self.assertIsInstance(subprocess_metadata, subprocess.CompletedProcess, 'The executed subprocess didn\'t yield a process-object as expected.')
+		self.assertEqual(subprocess_metadata.returncode, 0, 'The resulting process-object contains unexpected return code.')
+		self.assertEqual(subprocess_metadata.args, commandline_args, 'The resulting process-object contains different commandline arguments.')
+		stdout_value: str = subprocess_metadata.stdout
 		stdout_value = stdout_value.strip().strip('"')
 		self.assertEqual(stdout_value, echo_text,
 			'The stdout-result from the executed subprocess is not as expected because it doesn\'t contain the expected keywords.')
