@@ -1,4 +1,18 @@
-"""Miscellaneous tools which cover different problem domains and topics or wich are commonly used by the other tools in the toolbox."""
+"""
+Miscellaneous tools for the IMPSIA toolbox which cover different problem domains and topics or which are commonly used by the other toolbox-tools.
+
+This module provides common utility functions and error classes used across different
+problem domains. It includes tools for file path handling, string sanitization, and
+custom error types.
+
+Attributes:
+	ERRNO_SUCCESS (int): Success error code (0 on Unix-like systems, may vary on Windows)
+	ERRNO_UNKNOWN (int): Unknown error code (1 on Unix-like systems, may vary on Windows)
+	_LOGGER (Logger): Module-level logger instance
+
+Note:
+	This module is not intended for direct execution as a standalone script.
+"""
 import os
 import sys
 import re
@@ -28,31 +42,61 @@ try:
 	ERRNO_UNKNOWN = os.EX_SOFTWARE
 except AttributeError:
 	pass
+
 __all__: list[str] = ['ERRNO_SUCCESS', 'ERRNO_UNKNOWN', 'ImpsiaError', 'UsageError',
 	'strip_fileextension', 'sanitize_input_string', 'sanitize_userinput_path']
 
 
 class ImpsiaError(Exception):
-	"""Generic excpetion base class for customized exception types."""
+	"""
+	Generic exception base class for customized exception types for IMPSIA-specific errors.
+
+	Attributes:
+		errno (int): Error number, defaults to ERRNO_UNKNOWN
+		msg (str): Error message describing the issue
+	"""
 
 	errno = ERRNO_UNKNOWN
 
 	def __init__(self, msg):
-		"""Initizalize ImpsiaError object."""
+		"""
+		Initialize ImpsiaError object with a message.
+
+		Args:
+			msg (str): Description of the error
+		"""
 		self.msg = msg
 
 	def __str__(self):
-		"""Paraphrase ImpsiaError object as string."""
+		"""
+		Paraphrase ImpsiaError object as string: Convert error to string representation.
+
+		Returns:
+			str: The error message
+		"""
 		return self.msg
 
 
 class UsageError(ImpsiaError):
-	"""Customized exception type for usage errors."""
+	"""
+	Customized exception for incorrect usage of IMPSIA functionality.
+
+	This exception is raised when functions or methods are used incorrectly,
+	such as providing invalid parameters or violating usage constraints.
+
+	Attributes:
+		errno (int): Error number, defaults to 2 or os.EX_USAGE if available
+	"""
 
 	errno = 2
 
 	def __init__(self, msg):
-		"""Initizalize UsageError object."""
+		"""
+		Initialize UsageError object with a message.
+
+		Args:
+			msg (str): Description of the usage error
+		"""
 		super().__init__(msg)
 		try:
 			# Not all os.EX_... errnos are available on Windows => accessing them might throw an exception on Windows
@@ -62,7 +106,18 @@ class UsageError(ImpsiaError):
 
 
 def strip_fileextension(file_basename: str) -> str:
-	"""Strip file extension from filename."""
+	"""
+	Remove the file extension from a filename.
+
+	Args:
+		file_basename (str): The filename to process
+
+	Returns:
+		str: Filename with the extension removed
+
+	Raises:
+		UsageError: If file_basename contains path separators
+	"""
 	if file_basename.startswith('./') or file_basename.startswith(os.curdir + os.sep):
 		# strip leading './'
 		file_basename = file_basename[2:]
@@ -74,8 +129,19 @@ def strip_fileextension(file_basename: str) -> str:
 
 
 def sanitize_input_string(user_string: str, encoding: str, whitelist: str, blacklist: str) -> None:
-	"""Sanitize given user input string by throwing exception if undesired characters or encodings are detected within string."""
-	# Throws an UnicodeEncodeError if unsupported chars are within user input string !
+	"""
+	Sanitize and validate given user input string against allowed/disallowed characters and encoding by throwing exception.
+
+	Args:
+		user_string (str): The string to validate
+		encoding (str): The required string encoding (e.g., 'utf-8')
+		whitelist (str): Regular expression pattern of allowed characters
+		blacklist (str): Regular expression pattern of disallowed characters
+
+	Raises:
+		UnicodeEncodeError: If string contains characters not supported by the encoding
+		UsageError: If string contains characters matching blacklist or not matching whitelist
+	"""
 	user_string.encode(encoding, errors='strict')
 	patterns: list[str] = []
 	if blacklist:
@@ -99,16 +165,40 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 							mustbe_writable: bool = False, maybe_writable: bool = False,
 							mustbe_executable: bool = False, maybe_executable: bool = False) -> str:
 	"""
-	Sanitize given path from user input by checking whether path exists and attributes are as expected or whether path contains undesired characters.
+	Sanitize and validate given path from user input.
 
-	Mind the "mustbe"-flags and "maybe"-flags! Per default they are all set to False, which simply disqualifies all paths!
-	Thus you must set the suitable "mustbe"-flags and "maybe"-flags for your use case to True!
-	If a "mustbe"-flag is True, the corresponding "maybe"-flag will be automatically set to True.
+	This function performs comprehensive validation of a filesystem path, checking its existence and attributes.
+	It also sanitizes the path string against potentially harmful characters.
 
-	This function is only considering symlinks, directories and files. Fifos and special device files etc. are not supported!
+	Args:
+		path (str): The filesystem path to validate
+		encoding (str): The required string encoding for the path
+		mustbe_file (bool, optional): Path must be a regular file. Defaults to False
+		maybe_file (bool, optional): Path is allowed to be a regular file. Defaults to False
+		mustbe_directory (bool, optional): Path must be a directory. Defaults to False
+		maybe_directory (bool, optional): Path is allowed to be a directory. Defaults to False
+		mustbe_symlink (bool, optional): Path must be a symbolic link. Defaults to False
+		maybe_symlink (bool, optional): Path is allowed to be a symbolic link. Defaults to False
+		mustbe_readable (bool, optional): Path must be readable. Defaults to False
+		maybe_readable (bool, optional): Path is allowed to be readable. Defaults to False
+		mustbe_writable (bool, optional): Path must be writable. Defaults to False
+		maybe_writable (bool, optional): Path is allowed to be writable. Defaults to False
+		mustbe_executable (bool, optional): Path must be executable. Defaults to False
+		maybe_executable (bool, optional): Path is allowed to be executable. Defaults to False
+
+	Returns:
+		str: The validated and sanitized path (absolute path)
 
 	Raises:
-		UsageError: if path doesn't exist, doesn't have expected attributes (type and access permissions) or if path contains undesired characters.
+		UsageError: If path validation fails or if function parameters are inconsistent
+
+	Note:
+		- The function only considers symlinks, directories, and regular files
+		- The function does not check for FIFOs, sockets, or other special file types
+		- Mind the "mustbe"-flags and "maybe"-flags! Per default they are all set to False, which simply disqualifies all paths!
+		- At least one of maybe_symlink, maybe_directory, or maybe_file must be True (according to your use case)
+		- If a 'mustbe_*' flag is True, the corresponding 'maybe_*' flag is automatically set to True
+		- Special handling is implemented for Windows drive letters
 	"""
 	# maybe_suid_executable=False
 	########################################
@@ -167,7 +257,7 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 		raise UsageError('Wrong parametrization of function. Path must be allowed to be at least one category out of symlinks, directories or files.')
 
 	whitelist: str = r'\w'  # UNICODE word characters (see python doc of module "re").
-	whitelist += r'\. \-_'  # valid directoryname of filename components (space too, though deprecated , but NOT other whitespace !!)
+	whitelist += r'\. \-_'  # valid components of directory names of filenames (space too, though deprecated , but NOT other whitespace !!)
 	if os.extsep:
 		whitelist += str(os.extsep)
 	whitelist += r'/\\'  # directory separators
@@ -192,12 +282,12 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 	path = os.path.realpath(path)
 
 	########################################
-	# Beware using bare drive letters (e.g. "C:") on Windows as a path intented to point to the root directory of that windows-drive.
+	# Beware using bare drive letters (e.g. "C:") on Windows as a path intended to point to the root directory of that windows-drive.
 	# In some command line interpreters on windows the bare drive letter (e.g. "C:") of a windows-drive is resolved to the last CWD on that drive
-	# (instead of the ROOT directory of that window-drive).
+	# (instead of the ROOT directory of that windows-drive).
 	#
 	# Solution: append directory separator symbol behind the bare drive letter
-	#     => explicitly tell windows-CLI-interpreter to access the ROOT directory of that window-drive!
+	#     => explicitly tell windows-CLI-interpreter to access the ROOT directory of that windows-drive!
 	########################################
 	if (mustbe_directory and    # noqa: W504 line break after binary operator
 		os.name == 'nt' and    # noqa: W504 line break after binary operator

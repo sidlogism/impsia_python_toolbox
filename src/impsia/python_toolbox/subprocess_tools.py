@@ -100,14 +100,14 @@ class SubprocessRunner:
 
 	def get_inner_function_object_setting_uid_and_gid(self, user_uid, user_gid) -> Callable[[], Any]:
 		"""
-		Create a nested inner function object setting the given UID and GID in operating sytstem environment.
+		Create a nested inner function object setting the given UID and GID in operating system environment.
 
 		Args:
-			user_uid: the new, desired UID to be set in operating sytstem environment
-			user_gid: the new, desired GID to be set in operating sytstem environment
+			user_uid: the new, desired UID to be set in operating system environment
+			user_gid: the new, desired GID to be set in operating system environment
 
 		Returns:
-			A nested inner function object setting the given UID and GID in operating sytstem environment.
+			A nested inner function object setting the given UID and GID in operating system environment.
 		"""
 		def result():
 			os.setgid(user_gid)
@@ -162,7 +162,7 @@ class SubprocessRunner:
 			# - assemble a new environment-object to hold the user information of the desired user
 			# - call subprocess.run() with keyword-parameters
 			#   "env" using the newly created environment-object
-			#   and "preexec_fn" using the given nested inner function object setting the given UID and GID in operating sytstem environment
+			#   and "preexec_fn" using the given nested inner function object setting the given UID and GID in operating system environment
 			#   from get_inner_function_object_setting_uid_and_gid.
 			if os.name != 'posix':
 				raise UsageError(
