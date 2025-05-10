@@ -6,8 +6,9 @@ problem domains. It includes tools for file path handling, string sanitization, 
 custom error types.
 
 Attributes:
-	ERRNO_SUCCESS (int): Success error code (0 on Unix-like systems, may vary on Windows)
-	ERRNO_UNKNOWN (int): Unknown error code (1 on Unix-like systems, may vary on Windows)
+	ERRNO_SUCCESS (int): Success error code (default 0 on Unix-like systems, may vary depending on the OS)
+	ERRNO_USAGE (int): Usage error code (default 2 on Unix-like systems, may vary depending on the OS)
+	ERRNO_UNKNOWN (int): Unknown error code (default 1 on Unix-like systems, may vary depending on the OS)
 	_LOGGER (Logger): Module-level logger instance
 
 Note:
@@ -36,6 +37,13 @@ try:
 except AttributeError:
 	pass
 
+ERRNO_USAGE: int = 2
+try:
+	# Not all os.EX_... errnos are available on Windows => accessing them might throw an exception on Windows
+	ERRNO_USAGE = os.EX_USAGE
+except AttributeError:
+	pass
+
 ERRNO_UNKNOWN: int = 1
 try:
 	# Not all os.EX_... errnos are available on Windows => accessing them might throw an exception on Windows
@@ -43,7 +51,7 @@ try:
 except AttributeError:
 	pass
 
-__all__: list[str] = ['ERRNO_SUCCESS', 'ERRNO_UNKNOWN', 'ImpsiaError', 'UsageError',
+__all__: list[str] = ['ERRNO_SUCCESS', 'ERRNO_USAGE', 'ERRNO_UNKNOWN', 'ImpsiaError', 'UsageError',
 	'strip_fileextension', 'sanitize_input_string', 'sanitize_userinput_path']
 
 
@@ -88,7 +96,7 @@ class UsageError(ImpsiaError):
 		errno (int): Error number, defaults to 2 or os.EX_USAGE if available
 	"""
 
-	errno = 2
+	errno = ERRNO_USAGE
 
 	def __init__(self, msg):
 		"""
