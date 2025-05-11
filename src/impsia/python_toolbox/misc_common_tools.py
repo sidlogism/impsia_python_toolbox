@@ -286,29 +286,6 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 
 	sanitize_input_string(path, encoding, whitelist, blacklist)
 
-	# strongly requiring that realpath() also creates absolute paths like "abspath()" !
-	path = os.path.realpath(path)
-
-	########################################
-	# Beware using bare drive letters (e.g. "C:") on Windows as a path intended to point to the root directory of that windows-drive.
-	# In some command line interpreters on windows the bare drive letter (e.g. "C:") of a windows-drive is resolved to the last CWD on that drive
-	# (instead of the ROOT directory of that windows-drive).
-	#
-	# Solution: append directory separator symbol behind the bare drive letter
-	#     => explicitly tell windows-CLI-interpreter to access the ROOT directory of that windows-drive!
-	########################################
-	if (mustbe_directory and    # noqa: W504 line break after binary operator
-		os.name == 'nt' and    # noqa: W504 line break after binary operator
-		len(path) == 2 and    # noqa: W504 line break after binary operator
-		path[-1] == ':' and    # noqa: W504 line break after binary operator
-		path[0] in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
-		path += os.sep
-		_LOGGER.warning(f'We are operating on windows operating system and your path {path} is a bare drive letter. '
-			'Some command line interpreters on windows resolve such a path to the last CWD used on that windows-drive '
-			'(instead of the ROOT directory of that window-drive). '
-			'Thus we append the directory separator symbol behind your path to explicitly tell any windows-CLI-interpreter '
-			'to access the ROOT directory of that window-drive.')
-
 	########################################
 	# check if path exists
 	#
@@ -320,6 +297,33 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 	errormsg = ' => your argument in the following line is invalid:\n' + path
 	if not os.path.exists(path):
 		raise UsageError("Path doesn't exist or is not readable or doesn't grant permissions for os.stat() ." + errormsg)
+
+	# Making path an absolute and canonical path.
+	# strongly requiring that realpath() also creates absolute paths like "abspath()" !
+	try:
+		path = os.path.realpath(path, strict=True)
+	except OSError:
+		raise UsageError("Path doesn't exist or contains a symlink loop or other comparable problems." + errormsg)
+
+	########################################
+	# Beware using bare drive letters (e.g. "C:") on Windows as a path intended to point to the root directory of that windows-drive.
+	# In some command line interpreters on windows the bare drive letter (e.g. "C:") of a windows-drive is resolved to the last CWD on that drive
+	# (instead of the ROOT directory of that windows-drive).
+	#
+	# Solution: append directory separator symbol behind the bare drive letter
+	#     => explicitly tell windows-CLI-interpreter to access the ROOT directory of that windows-drive!
+	########################################
+	if (mustbe_directory and    # noqa: W504 line break after binary operator
+			os.name == 'nt' and    # noqa: W504 line break after binary operator
+			len(path) == 2 and    # noqa: W504 line break after binary operator
+			path[-1] == ':' and    # noqa: W504 line break after binary operator
+			path[0] in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+		path += os.sep
+		_LOGGER.warning(f'We are operating on windows operating system and your path {path} is a bare drive letter. '
+						'Some command line interpreters on windows resolve such a path to the last CWD used on that windows-drive '
+						'(instead of the ROOT directory of that window-drive). '
+						'Thus we append the directory separator symbol behind your path to explicitly tell any windows-CLI-interpreter '
+						'to access the ROOT directory of that window-drive.')
 
 	########################################
 	# check is symlink, is dir, is file

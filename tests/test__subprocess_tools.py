@@ -20,7 +20,7 @@ __all__: list[str] = ['TestSubprocessRunner']
 class TestSubprocessRunner(unittest.TestCase):
 	"""Test SubprocessRunner-wrapper."""
 	def test_run_commandline__echo(self) -> None:
-		"""Test SubprocessRunner.run_commandline with simple echo-command."""
+		"""Test SubprocessRunner.run_commandline() with simple echo-command."""
 		echo_text: str = 'gotcha! echo was successful!'
 		runner: SubprocessRunner = SubprocessRunner()
 		commandline_args = ['echo', f'"{echo_text}"']
@@ -40,7 +40,7 @@ class TestSubprocessRunner(unittest.TestCase):
 			'The stdout-result from the executed subprocess is not as expected because it doesn\'t contain the expected keywords.')
 
 	def test_run_commandline__timeout(self) -> None:
-		"""Test SubprocessRunner.run_commandline with hanging cat-command and force timeout."""
+		"""Test SubprocessRunner.run_commandline() with hanging cat-command and thereby force timeout."""
 		runner: SubprocessRunner = SubprocessRunner()
 		test_timeout_seconds = 1
 		commandline_args = ['cat', '-']
@@ -57,7 +57,7 @@ class TestSubprocessRunner(unittest.TestCase):
 		_LOGGER.info(f'timeout info: {timeout_data}')
 
 	def test_run_commandline__error(self) -> None:
-		"""Test SubprocessRunner.run_commandline with crashing cat-command and force error."""
+		"""Test SubprocessRunner.run_commandline() with crashing cat-command and thereby force error."""
 		runner: SubprocessRunner = SubprocessRunner()
 		commandline_args = ['cat', 'nonExistingFileForTest001.txt']
 		results: dict[str, Any] = runner.run_commandline(commandline_args, suppress_missing_timeout_warning=True)
@@ -74,7 +74,7 @@ class TestSubprocessRunner(unittest.TestCase):
 		_LOGGER.info(f'error return code: {error_data.returncode}; stderr: "{error_data.stderr}"')
 
 	def test_get_pipes_default_encoding_name(self) -> None:
-		"""Test SubprocessRunner.run_commandline with crashing cat-command and force error."""
+		"""Test SubprocessRunner.get_pipes_default_encoding_name() and test returned encoding by applying it to stdout."""
 		runner: SubprocessRunner = SubprocessRunner()
 		pipe_encoding: str = runner.get_pipes_default_encoding_name(sys.stdout, last_resort_encoding='UTF-8')
 		# check writing to stdout using the determined encoding
