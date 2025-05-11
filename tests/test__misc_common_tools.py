@@ -110,7 +110,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__readable(self) -> None:
 		"""Test sanitize_userinput_path with readable requirement."""
-		# Make file readable (should be by default)
+		# Make file readable only
 		os.chmod(self.temp_file_path, 0o444)
 		# If no exception is raised, the test passes
 		sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_readable=True,
@@ -120,7 +120,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__missing_readable_rights(self) -> None:
 		"""Test sanitize_userinput_path with readable requirement."""
-		# Make file readable (should be by default)
+		# Make file writable only
 		os.chmod(self.temp_file_path, 0o222)
 		with self.assertRaises(UsageError):
 			sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_readable=True,
@@ -130,7 +130,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__writable(self) -> None:
 		"""Test sanitize_userinput_path with writable requirement."""
-		# Make file writable
+		# Make file writable only
 		os.chmod(self.temp_file_path, 0o222)
 		# If no exception is raised, the test passes
 		sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_writable=True,
@@ -140,7 +140,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__executable(self) -> None:
 		"""Test sanitize_userinput_path with executable requirement."""
-		# Make file executable
+		# Make file executable only
 		os.chmod(self.temp_file_path, 0o111)
 		# If no exception is raised, the test passes
 		sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_executable=True,
@@ -150,7 +150,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__undesired_executable_rights(self) -> None:
 		"""Test sanitize_userinput_path with executable requirement."""
-		# Make file executable
+		# Make file both readable and executable
 		os.chmod(self.temp_file_path, 0o555)
 		with self.assertRaises(UsageError):
 			sanitize_userinput_path(self.temp_file_path, 'UTF-8', maybe_executable=False,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit test cases for testing the subprocess tools and subproces sutilities of impsia_python_toolbox."""
+"""Unit test cases for testing the subprocess tools and subprocess utilities of impsia_python_toolbox."""
 
 import sys
 import unittest
