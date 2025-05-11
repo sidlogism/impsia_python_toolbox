@@ -299,11 +299,13 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 		raise UsageError("Path doesn't exist or is not readable or doesn't grant permissions for os.stat() ." + errormsg)
 
 	# Making path an absolute and canonical path.
+	# This also resolves symbolic links, so we don't use it if mustbe_symlink is True.
 	# strongly requiring that realpath() also creates absolute paths like "abspath()" !
-	try:
-		path = os.path.realpath(path, strict=True)
-	except OSError:
-		raise UsageError("Path doesn't exist or contains a symlink loop or other comparable problems." + errormsg)
+	if not mustbe_symlink:
+		try:
+			path = os.path.realpath(path, strict=True)
+		except OSError as original_exc:
+			raise UsageError("Path doesn't exist or contains a symlink loop or other comparable problems." + errormsg) from original_exc
 
 	########################################
 	# Beware using bare drive letters (e.g. "C:") on Windows as a path intended to point to the root directory of that windows-drive.
@@ -329,9 +331,8 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 	# check is symlink, is dir, is file
 	# Only considering symlinks, dirs and files (no fifos etc.) !
 	#
-	# os.path.isdir(path)
-	# This follows symbolic links, so both islink() and isdir() can be true for the same path.
-	# => first check for symbolic links !!
+	# Both os.path.isdir(path) and os.path.isfile(path) follow symbolic links, so both islink() and isdir()/isfile() can be true for the same path.
+	# => first check for symbolic links and if mustbe_symlink is True, skip the checks of maybe_directory and maybe_file.
 	########################################
 	if mustbe_symlink and not os.path.islink(path):
 		raise UsageError('Path must be symlink.' + errormsg)
@@ -340,13 +341,15 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 
 	if mustbe_directory and not os.path.isdir(path):
 		raise UsageError('Path must be directory.' + errormsg)
-	if not maybe_directory and os.path.isdir(path):
-		raise UsageError('Path may NOT be directory.' + errormsg)
+	if not mustbe_symlink:
+		if not maybe_directory and os.path.isdir(path):
+			raise UsageError('Path may NOT be directory.' + errormsg)
 
 	if mustbe_file and not os.path.isfile(path):
 		raise UsageError('Path must be file.' + errormsg)
-	if not maybe_file and os.path.isfile(path):
-		raise UsageError('Path may NOT be file.' + errormsg)
+	if not mustbe_symlink:
+		if not maybe_file and os.path.isfile(path):
+			raise UsageError('Path may NOT be file.' + errormsg)
 
 	########################################
 	# check access permissions of path
