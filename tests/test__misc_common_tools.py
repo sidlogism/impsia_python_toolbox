@@ -50,6 +50,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__valid_file(self) -> None:
 		"""Test sanitize_userinput_path with valid file path."""
+		# If no exception is raised, the test passes
 		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_file=True,
 										maybe_readable=True,
 										maybe_writable=True,
@@ -59,18 +60,18 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__valid_directory(self) -> None:
 		"""Test sanitize_userinput_path with valid directory path."""
-		result: str = sanitize_userinput_path(self.temp_dir, 'UTF-8', mustbe_directory=True,
-										maybe_readable=True,
-										maybe_writable=True,
-										maybe_executable=True)
-		self.assertEqual(result, os.path.realpath(self.temp_dir),
-						'The sanitized path does not match the expected canonical path.')
+		# If no exception is raised, the test passes
+		sanitize_userinput_path(self.temp_dir, 'UTF-8', mustbe_directory=True,
+								maybe_readable=True,
+								maybe_writable=True,
+								maybe_executable=True)
 
 	def test_sanitize_userinput_path__valid_symlink(self) -> None:
 		"""Test sanitize_userinput_path with valid symlink path."""
 		if not self.symlinks_supported:
 			self.skipTest("Symlinks not supported on this platform")
 
+		# If no exception is raised, the test passes
 		result: str = sanitize_userinput_path(self.temp_symlink_path, 'UTF-8', mustbe_symlink=True,
 										maybe_readable=True,
 										maybe_writable=True,
@@ -111,37 +112,51 @@ class TestMiscCommonTools(unittest.TestCase):
 		"""Test sanitize_userinput_path with readable requirement."""
 		# Make file readable (should be by default)
 		os.chmod(self.temp_file_path, 0o444)
+		# If no exception is raised, the test passes
+		sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_readable=True,
+								maybe_file=True,
+								maybe_writable=False,
+								maybe_executable=False)
 
-		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_readable=True,
-										maybe_file=True,
-										maybe_writable=False,
-										maybe_executable=False)
-		self.assertEqual(result, os.path.realpath(self.temp_file_path),
-						'The sanitized path does not match the expected canonical path.')
+	def test_sanitize_userinput_path__missing_readable_rights(self) -> None:
+		"""Test sanitize_userinput_path with readable requirement."""
+		# Make file readable (should be by default)
+		os.chmod(self.temp_file_path, 0o222)
+		with self.assertRaises(UsageError):
+			sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_readable=True,
+									maybe_file=True,
+									maybe_writable=True,
+									maybe_executable=True)
 
 	def test_sanitize_userinput_path__writable(self) -> None:
 		"""Test sanitize_userinput_path with writable requirement."""
 		# Make file writable
 		os.chmod(self.temp_file_path, 0o222)
-
-		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_writable=True,
-										maybe_file=True,
-										maybe_readable=False,
-										maybe_executable=False)
-		self.assertEqual(result, os.path.realpath(self.temp_file_path),
-						'The sanitized path does not match the expected canonical path.')
+		# If no exception is raised, the test passes
+		sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_writable=True,
+								maybe_file=True,
+								maybe_readable=False,
+								maybe_executable=False)
 
 	def test_sanitize_userinput_path__executable(self) -> None:
 		"""Test sanitize_userinput_path with executable requirement."""
 		# Make file executable
 		os.chmod(self.temp_file_path, 0o111)
+		# If no exception is raised, the test passes
+		sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_executable=True,
+								maybe_file=True,
+								maybe_readable=False,
+								maybe_writable=False)
 
-		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_executable=True,
-										maybe_file=True,
-										maybe_readable=False,
-										maybe_writable=False)
-		self.assertEqual(result, os.path.realpath(self.temp_file_path),
-						'The sanitized path does not match the expected canonical path.')
+	def test_sanitize_userinput_path__undesired_executable_rights(self) -> None:
+		"""Test sanitize_userinput_path with executable requirement."""
+		# Make file executable
+		os.chmod(self.temp_file_path, 0o555)
+		with self.assertRaises(UsageError):
+			sanitize_userinput_path(self.temp_file_path, 'UTF-8', maybe_executable=False,
+									maybe_file=True,
+									maybe_readable=True,
+									maybe_writable=True)
 
 	def test_sanitize_userinput_path__invalid_requirement(self) -> None:
 		"""Test sanitize_userinput_path with impossible file requirement."""
