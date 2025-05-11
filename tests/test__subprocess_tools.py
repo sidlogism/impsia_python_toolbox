@@ -23,7 +23,7 @@ class TestSubprocessRunner(unittest.TestCase):
 		"""Test SubprocessRunner.run_commandline() with simple echo-command."""
 		echo_text: str = 'gotcha! echo was successful!'
 		runner: SubprocessRunner = SubprocessRunner()
-		commandline_args = ['echo', f'"{echo_text}"']
+		commandline_args: list[str] = ['echo', f'"{echo_text}"']
 		results: dict[str, Any] = runner.run_commandline(commandline_args, suppress_missing_timeout_warning=False)
 		self.assertNotIn(KEY_TIMEOUT_PROCESS, results, 'The executed subprocess ran into a timeout unexpectedly.')
 		self.assertNotIn(KEY_FAILED_PROCESS, results, 'The executed subprocess failed unexpectedly.')
@@ -43,7 +43,7 @@ class TestSubprocessRunner(unittest.TestCase):
 		"""Test SubprocessRunner.run_commandline() with hanging cat-command and thereby force timeout."""
 		runner: SubprocessRunner = SubprocessRunner()
 		test_timeout_seconds = 1
-		commandline_args = ['cat', '-']
+		commandline_args: list[str] = ['cat', '-']
 		results: dict[str, Any] = runner.run_commandline(commandline_args, timeout=test_timeout_seconds)
 		self.assertNotIn(KEY_SUCCESSFUL_PROCESS, results, 'The executed subprocess unexpectedly finished successful without timeout.')
 		self.assertNotIn(KEY_FAILED_PROCESS, results, 'The executed subprocess failed unexpectedly.')
@@ -59,7 +59,7 @@ class TestSubprocessRunner(unittest.TestCase):
 	def test_run_commandline__error(self) -> None:
 		"""Test SubprocessRunner.run_commandline() with crashing cat-command and thereby force error."""
 		runner: SubprocessRunner = SubprocessRunner()
-		commandline_args = ['cat', 'nonExistingFileForTest001.txt']
+		commandline_args: list[str] = ['cat', 'nonExistingFileForTest001.txt']
 		results: dict[str, Any] = runner.run_commandline(commandline_args, suppress_missing_timeout_warning=True)
 		self.assertNotIn(KEY_SUCCESSFUL_PROCESS, results, 'The executed subprocess unexpectedly finished successful without error.')
 		self.assertNotIn(KEY_TIMEOUT_PROCESS, results, 'The executed subprocess ran into a timeout unexpectedly.')

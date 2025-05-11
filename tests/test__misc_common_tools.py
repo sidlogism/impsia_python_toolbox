@@ -20,17 +20,17 @@ class TestMiscCommonTools(unittest.TestCase):
 	def setUp(self) -> None:
 		"""Set up temporary test files and directories."""
 		# Create a temporary directory
-		self.temp_dir = tempfile.mkdtemp()
+		self.temp_dir: str = tempfile.mkdtemp()
 
 		# Create a temporary file
 		self.temp_file_fd, self.temp_file_path = tempfile.mkstemp(dir=self.temp_dir)
 		os.close(self.temp_file_fd)
 
 		# Create a temporary symlink (if supported by OS)
-		self.temp_symlink_path = os.path.join(self.temp_dir, "symlink_test")
+		self.temp_symlink_path: str = os.path.join(self.temp_dir, "symlink_test")
 		try:
 			os.symlink(self.temp_file_path, self.temp_symlink_path)
-			self.symlinks_supported = True
+			self.symlinks_supported: bool = True
 		except (OSError, AttributeError):
 			self.symlinks_supported = False
 
@@ -50,7 +50,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__valid_file(self) -> None:
 		"""Test sanitize_userinput_path with valid file path."""
-		result = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_file=True,
+		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_file=True,
 										maybe_readable=True,
 										maybe_writable=True,
 										maybe_executable=True)
@@ -59,7 +59,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__valid_directory(self) -> None:
 		"""Test sanitize_userinput_path with valid directory path."""
-		result = sanitize_userinput_path(self.temp_dir, 'UTF-8', mustbe_directory=True,
+		result: str = sanitize_userinput_path(self.temp_dir, 'UTF-8', mustbe_directory=True,
 										maybe_readable=True,
 										maybe_writable=True,
 										maybe_executable=True)
@@ -71,7 +71,7 @@ class TestMiscCommonTools(unittest.TestCase):
 		if not self.symlinks_supported:
 			self.skipTest("Symlinks not supported on this platform")
 
-		result = sanitize_userinput_path(self.temp_symlink_path, 'UTF-8', mustbe_symlink=True,
+		result: str = sanitize_userinput_path(self.temp_symlink_path, 'UTF-8', mustbe_symlink=True,
 										maybe_readable=True,
 										maybe_writable=True,
 										maybe_executable=True)
@@ -100,7 +100,7 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_userinput_path__nonexistent_path(self) -> None:
 		"""Test sanitize_userinput_path with nonexistent path."""
-		nonexistent_path = os.path.join(self.temp_dir, "nonexistent_file.txt")
+		nonexistent_path: str = os.path.join(self.temp_dir, "nonexistent_file.txt")
 		with self.assertRaises(UsageError):
 			sanitize_userinput_path(nonexistent_path, 'UTF-8', mustbe_file=True,
 									maybe_readable=True,
@@ -112,7 +112,7 @@ class TestMiscCommonTools(unittest.TestCase):
 		# Make file readable (should be by default)
 		os.chmod(self.temp_file_path, 0o444)
 
-		result = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_readable=True,
+		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_readable=True,
 										maybe_file=True,
 										maybe_writable=False,
 										maybe_executable=False)
@@ -124,7 +124,7 @@ class TestMiscCommonTools(unittest.TestCase):
 		# Make file writable
 		os.chmod(self.temp_file_path, 0o222)
 
-		result = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_writable=True,
+		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_writable=True,
 										maybe_file=True,
 										maybe_readable=False,
 										maybe_executable=False)
@@ -136,7 +136,7 @@ class TestMiscCommonTools(unittest.TestCase):
 		# Make file executable
 		os.chmod(self.temp_file_path, 0o111)
 
-		result = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_executable=True,
+		result: str = sanitize_userinput_path(self.temp_file_path, 'UTF-8', mustbe_executable=True,
 										maybe_file=True,
 										maybe_readable=False,
 										maybe_writable=False)
@@ -158,8 +158,8 @@ class TestMiscCommonTools(unittest.TestCase):
 
 		# This test only runs on Windows where drive letters are used
 		# For example, if we have a C: drive
-		drive_letter = 'C:'
-		result = sanitize_userinput_path(drive_letter, 'UTF-8', mustbe_directory=True,
+		drive_letter: str = 'C:'
+		result: str = sanitize_userinput_path(drive_letter, 'UTF-8', mustbe_directory=True,
 										maybe_readable=True,
 										maybe_writable=True,
 										maybe_executable=True)
@@ -168,18 +168,18 @@ class TestMiscCommonTools(unittest.TestCase):
 
 	def test_sanitize_input_string__valid_string(self) -> None:
 		"""Test sanitize_input_string with valid string."""
-		test_string = "valid_string-123.txt"
-		whitelist = r'\w\.\-_'
-		blacklist = r';&#'
+		test_string: str = "valid_string-123.txt"
+		whitelist: str = r'\w\.\-_'
+		blacklist: str = r';&#'
 
 		# If no exception is raised, the test passes
 		sanitize_input_string(test_string, 'utf-8', whitelist, blacklist)
 
 	def test_sanitize_input_string__invalid_string(self) -> None:
 		"""Test sanitize_input_string with invalid string."""
-		test_string = "invalid_string;with#blacklisted&chars"
-		whitelist = r'\w\.\-_'
-		blacklist = r';&#'
+		test_string: str = "invalid_string;with#blacklisted&chars"
+		whitelist: str = r'\w\.\-_'
+		blacklist: str = r';&#'
 
 		with self.assertRaises(UsageError):
 			sanitize_input_string(test_string, 'utf-8', whitelist, blacklist)
