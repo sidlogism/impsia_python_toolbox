@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Unit test cases for testing the logging tools and logging utilities of impsia_python_toolbox."""
 
-import unittest
-import sys
-import os
+from datetime import datetime
+from logging import Logger
 import inspect
 import logging
 import logging.config
-from logging import Logger
-from datetime import datetime
+import os
+import sys
+import time
+import unittest
 from impsia.python_toolbox import logging_tools
 
 
@@ -27,8 +28,6 @@ class TestLoggingTools(unittest.TestCase):
 	"""Unit test case for testing the logging configuration and the loging tools and utilities of impsia_python_toolbox."""
 
 	def setUp(self) -> None:
-		# get script starting time for logwelcome/loggoodbye
-		self.start_time: datetime = datetime.now()
 		# check precondition for tests: global root loglevel must be at least INFO or below:
 		root_loglevel: int = _LOGGER.getEffectiveLevel()
 		if root_loglevel > logging.INFO:
@@ -48,6 +47,8 @@ class TestLoggingTools(unittest.TestCase):
 
 	def test_print_my_logwelcome(self) -> None:
 		"""Test logging_tools.print_my_logwelcome."""
+		# get starting time of test case representing the starting time of the calling python script or module.
+		start_time: datetime = datetime.now()
 		# Get basename of the currenlty executed script file. Don't pass sys.argv[0], but use inspect instead.
 		executing_script_basename: str = os.path.basename(inspect.getfile(inspect.currentframe()))    # type: ignore[arg-type]
 		########################################
@@ -60,14 +61,18 @@ class TestLoggingTools(unittest.TestCase):
 		########################################
 
 		# perform the actual logging-test
-		logging_tools.print_my_logwelcome(executing_script_basename, sys.argv, self.start_time)
+		logging_tools.print_my_logwelcome(executing_script_basename, start_time, sys.argv)
 		# check the last line of printed welcome-text
 		expected_keywords: str = logging_tools.LOGSEPARATOR_UNDERSCORE
 		self._compare_last_logline_with_expected_keywords(expected_keywords)
 
 	def test_print_my_loggoodbye(self) -> None:
 		"""Test logging_tools.print_my_loggoodbye."""
-		logging_tools.print_my_loggoodbye(self.start_time)
+		# get starting time of test case representing the starting time of the calling python script or module.
+		start_time: datetime = datetime.now()
+		# sleep one second so that the computed time delta is not too small
+		time.sleep(1)
+		logging_tools.print_my_loggoodbye(start_time)
 		# check the last line of printed goodbye-text
 		expected_keywords: str = logging_tools.LOGSEPARATOR_HASH
 		self._compare_last_logline_with_expected_keywords(expected_keywords)

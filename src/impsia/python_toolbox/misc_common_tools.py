@@ -14,11 +14,11 @@ Attributes:
 Note:
 	This module is not intended for direct execution as a standalone script.
 """
-import os
-import sys
-import re
-import logging
 from logging import Logger
+import logging
+import os
+import re
+import sys
 
 if __name__ == "__main__":
 	# exit execution and indicate error
@@ -64,7 +64,8 @@ class ImpsiaError(Exception):
 		msg (str): Error message describing the issue
 	"""
 
-	errno = ERRNO_UNKNOWN
+	errno: int = ERRNO_UNKNOWN
+	msg: str
 
 	def __init__(self, msg):
 		"""
@@ -75,12 +76,12 @@ class ImpsiaError(Exception):
 		"""
 		self.msg = msg
 
-	def __str__(self):
+	def __str__(self) -> str:
 		"""
 		Paraphrase ImpsiaError object as string: Convert error to string representation.
 
 		Returns:
-			str: The error message
+			string representation of the error
 		"""
 		return self.msg
 
@@ -121,7 +122,7 @@ def strip_fileextension(file_basename: str) -> str:
 		file_basename (str): The filename to process
 
 	Returns:
-		str: Filename with the extension removed
+		Filename with the extension removed
 
 	Raises:
 		UsageError: If file_basename contains path separators
@@ -195,7 +196,7 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 		maybe_executable (bool, optional): Path is allowed to be executable. Defaults to False
 
 	Returns:
-		str: The validated and sanitized path (absolute path)
+		The validated and sanitized path (absolute path)
 
 	Raises:
 		UsageError: If path validation fails or if function parameters are inconsistent

@@ -1,4 +1,17 @@
-"""Tools for handling subprocesses."""
+"""
+Tools for handling subprocesses.
+
+Attributes:
+	KEY_SUCCESSFUL_PROCESS (str): Key for subprocess metadata in the result dictionary of run_commandline() for success case.
+	KEY_TIMEOUT_PROCESS (str): Key for subprocess metadata in the result dictionary of run_commandline() for timeout case.
+	KEY_FAILED_PROCESS (str): Key for subprocess metadata in the result dictionary of run_commandline() for failure case.
+	_TESTED_OPERATING_SYSTEMS (list[str]): List of platforms or operating system categories on which this class was already successfully tested.
+	_LOGGER (Logger): Module-level logger instance
+
+Note:
+	This module is not intended for direct execution as a standalone script.
+"""
+
 from logging import Logger
 from subprocess import TimeoutExpired, CalledProcessError
 from typing import Dict, Any, Optional, TextIO, Callable
@@ -6,9 +19,9 @@ import io
 import locale
 import logging
 import os
+import pwd
 import subprocess
 import sys
-import pwd
 from impsia.python_toolbox.misc_common_tools import UsageError
 
 
@@ -31,7 +44,16 @@ __all__: list[str] = ['SubprocessRunner', 'KEY_SUCCESSFUL_PROCESS', 'KEY_FAILED_
 
 
 class SubprocessRunner:
-	"""Utility-wrapper for running subprocesses easily and reliably."""
+	"""
+	Utility-wrapper for running subprocesses easily and reliably.
+
+	Attributes:
+		pipe_encoding: str
+			The encoding used for pipes/streams (stdout, stderr, etc.) and text file handles.
+			This is determined by the system default encoding or set to 'UTF-8' as a last resort.
+	"""
+
+	pipe_encoding: str
 
 	def __init__(self):
 		"""Initialize wrapper for running subprocesses by determining default stream encoding and checking current OS."""
@@ -50,9 +72,16 @@ class SubprocessRunner:
 
 	def get_pipes_default_encoding_name(self, stream: TextIO, last_resort_encoding: str = 'UTF-8') -> str:
 		"""
-		Try to determine the supported default encoding for pipes/streams by checking different environment configurations and settings.
+		Try to determine the supported default encoding for pipes/streams/file handles by checking different environment configurations and settings.
 
 		See also https://docs.python.org/3/library/os.html#utf8-mode and https://docs.python.org/3/library/sys.html#sys.stdout .
+
+		Args:
+			stream: the stream for which the encoding should be determined (e.g. sys.stdout)
+			last_resort_encoding (optional): the last resort encoding to be used if no other encoding could be determined
+
+		Returns:
+			The determined default encoding of the given stream or from environment configurations and settings.
 		"""
 		if 'PYTHONIOENCODING' in os.environ:
 			_LOGGER.debug(f"ignoring environment variable 'PYTHONIOENCODING':{str(os.environ['PYTHONIOENCODING'])}")
@@ -129,9 +158,9 @@ class SubprocessRunner:
 				IMPORTANT: Don't use any double quotes in the args parameter here because the subprocess module somehow ignores such CLI arguments.
 				For example use rsync --exclude=.viminfo --exclude=*.swp instead of rsync --exclude=".viminfo" --exclude="*.swp".
 				For example use ['ps', '-p', str(pid), '-uAO', 'msgsnd,msgrcv'] instead of ['ps', '-p', str(pid), '-uAO', '"msgsnd,msgrcv"'].
-			timeout: timeout interval in seconds for executing the given command line. The default value is None, which deactivates the timeout.
-			suppress_missing_timeout_warning: If False, there will be printed a warning message about a missing timeout if the given timeout-value is None.
-			username: name of alternative operating system user to execute the subprocess
+			timeout (optional): timeout interval in seconds for executing the given command line. The default value is None, which deactivates the timeout.
+			suppress_missing_timeout_warning (optional): If False, a warning message will be printed if the optional timeout-argument was not provided.
+			username (optional): name of alternative operating system user to execute the subprocess
 				IMPORTANT: This option is only functional on POSIX/unix/linux operating systems!
 
 		Examples:
@@ -145,6 +174,12 @@ class SubprocessRunner:
 
 		Raises:
 			UsageError: if username-argument was provided on operating systems other than POSIX/unix/linux systems
+
+		Returns:
+			A dictionary with the following key-value pairs:
+				key KEY_SUCCESSFUL_PROCESS => value: subprocess.CompletedProcess object if the subprocess finished successfully. None otherwise.
+				key KEY_TIMEOUT_PROCESS => value: subprocess.TimeoutExpired object if the subprocess timed out. None otherwise.
+				key KEY_FAILED_PROCESS => value: subprocess.CalledProcessError object if the subprocess failed. None otherwise.
 		"""
 		for arg in commandline_args:
 			if arg.strip() == '-':

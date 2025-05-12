@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """Unit test cases for testing the subprocess tools and subprocess utilities of impsia_python_toolbox."""
 
-import sys
-import unittest
-import logging
-import subprocess
 from logging import Logger
 from typing import Any
-from impsia.python_toolbox.subprocess_tools import SubprocessRunner
+import logging
+import subprocess
+import sys
+import unittest
 from impsia.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, KEY_FAILED_PROCESS, KEY_TIMEOUT_PROCESS
-
+from impsia.python_toolbox.subprocess_tools import SubprocessRunner
 
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
