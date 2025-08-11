@@ -101,6 +101,7 @@ _Side notes:_
 
 Examples:
 * In "distribution root" (see below) run: `python3 -Walways -m unittest discover -v -s tests`
+* In "distribution root" (see below) run: `python3 -Walways -m unittest discover -v -s tests -p "test__misc_common_tools.py"`
 * In "distribution root" (see below) run: `python3 -Walways -m doctest -v src/impsia/python_toolbox/*.py`
 * In "import package" directory (see below) run: `python3 -Walways -m doctest -v subprocess_tools.py`
 
@@ -115,22 +116,39 @@ The tools are free to use. No warranty or liability of any kind included. See li
 ## Terminology ##
 For uniformity and simplicity, all documentation will stick to the following terminology:
 
-* "import package" (or regular, simple package):
-	* e. g. folder impsia/python_toolbox/
-	* Directory containing a "\_\_init\_\_.py" file (and further python modules).
+* "import package" (or "simple package", "regular package", "Python package" or simply "package"):
+	* e. g. folder "python_toolbox/" (in src/impsia/)
+	* **Directory containing a "\_\_init\_\_.py" file (and further Python modules).**
 	* in accordance with the PyPA-terminology:
-		* https://packaging.python.org/en/latest/glossary/#term-Import-Package
+		* https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
+			* "Regular import packages have an \_\_init\_\_.py."
+        * https://packaging.python.org/en/latest/glossary/#term-Import-Package
 		* https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
 		* https://packaging.python.org/en/latest/tutorials/packaging-projects/
+			* name origin: "[...] the existence of an \_\_init\_\_.py file allows users to import the directory as a regular package, [...]"
+        * legacy docu: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
+			* "package: a module that contains other modules; typically contained in a directory in the filesystem and distinguished from other directories by the presence of a file __init__.py."
 
 * "namespace package"
-	* e. g. all "impsia" directories without "\_\_init\_\_.py" file
-	* see: https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
+	* **e. g. all "impsia" directories without "\_\_init\_\_.py" file**
+	* see "Native namespace packages" on: https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
 
 * "distribution root" directory (or "project root" directory)
-	* Directory containing the pyproject.toml and tox.ini files. This is also the base directory of the git repository for project "impsia_python_toolbox".
+	* **Directory containing the pyproject.toml and tox.ini files. This is also the base directory of the git repository for project "impsia_python_toolbox".**
 	* in accordance with the PyPA-terminology: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
 
 * "src layout"/"src-layout", see:
 	* https://setuptools.pypa.io/en/latest/userguide/package_discovery.html#src-layout
 	* https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout
+
+* "distribution package" (or "(module) distribution" or simply "project"):
+	* e. g. the "NumPy" or "SciPy" libraries in the PyPI
+	* **A Python library (collection of Python modules) that you can download and install as a single "distribution" unit (e. g. from PyPI).**
+	* in accordance with the PyPA-terminology:
+		* https://packaging.python.org/en/latest/glossary/#term-Distribution-Package
+			* "A versioned archive file that contains Python packages, modules, and other resource files that are used to distribute a Release. The archive file is what an end-user will download from the internet and install."
+		* https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
+			* "A distribution package is a piece of software that you can install."
+			* "Alternatively, the term “distribution package” can be used to refer to a specific file that contains a certain version of a project."
+		* legacy docu: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
+        	* "module distribution: a collection of Python modules distributed together as a single downloadable resource and meant to be installed en masse."
