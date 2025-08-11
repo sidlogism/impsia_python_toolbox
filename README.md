@@ -89,15 +89,18 @@ _Side notes:_
 
 ## How to run the unit tests, doctests and linters automatically ##
 
-* You first need to install the linters listed in tox.ini. The automated pip-installation via tox-dependencies is omitted because on OpenBSD python "distribution packages" are installed via OS-packages (via pkg_add) instead of via pip.
-* After installation of required linters, set the environment variables `PYTHONPATH` and `MYPYPATH` for import-discovery (see above and `tox.ini` for more details).
-* Finally, in "distribution root" (see definition below) run: `tox`
+* 1. You first need to install the linters listed in tox.ini. The automated pip-installation via tox-dependencies is omitted because on OpenBSD python "distribution packages" are installed via OS-packages (via pkg_add) instead of via pip.
+* 2. After installation of the required linters, set the environment variables `PYTHONPATH` and `MYPYPATH` for import-discovery (see above and `tox.ini` for more details).
+* 3. Finally, in "distribution root" (see definition below) run: `tox`
 	* You can also run the `tox`-command in any subdirectory of "distribution root" (see definition below).
+* 4. Customize `tox.ini` file for your purposes.
+	* Place your own Python code for example in the `src/` subdirectory and your test code in the `tests/` subdirectory.
+	* Alternatively, place your Python code in some other directory and adapt the commands and parameters for import-discovery in `tox.ini` accordingly. See "src layout" below for more details.
 
 
 ## How to run the unit tests, linters and the single doctests manually ##
-* First set the environment variables `PYTHONPATH` and `MYPYPATH` for import-discovery (see above and `tox.ini` for more details).
-* Second, run linter command or test command. **See commands in tox.ini file for examples.**
+* 1. First set the environment variables `PYTHONPATH` and `MYPYPATH` for import-discovery (see above and `tox.ini` for more details).
+* 2. Second, run the desired linter command or test command. **See commands in tox.ini file for examples.**
 
 Examples:
 * In "distribution root" (see below) run: `python3 -Walways -m unittest discover -v -s tests`
@@ -118,7 +121,7 @@ For uniformity and simplicity, all documentation will stick to the following ter
 
 * "import package" (or "simple package", "regular package", "Python package" or simply "package"):
 	* e. g. folder "python_toolbox/" (in src/impsia/)
-	* **Directory containing a "\_\_init\_\_.py" file (and further Python modules).**
+	* **Directory containing an "\_\_init\_\_.py" file (and further Python modules).**
 	* in accordance with the PyPA-terminology:
 		* https://packaging.python.org/en/latest/guides/packaging-namespace-packages/
 			* "Regular import packages have an \_\_init\_\_.py."
@@ -127,7 +130,7 @@ For uniformity and simplicity, all documentation will stick to the following ter
 		* https://packaging.python.org/en/latest/tutorials/packaging-projects/
 			* name origin: "[...] the existence of an \_\_init\_\_.py file allows users to import the directory as a regular package, [...]"
         * legacy docu: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
-			* "package: a module that contains other modules; typically contained in a directory in the filesystem and distinguished from other directories by the presence of a file __init__.py."
+			* "package: a module that contains other modules; typically contained in a directory in the filesystem and distinguished from other directories by the presence of a file \_\_init\_\_.py."
 
 * "namespace package"
 	* **e. g. all "impsia" directories without "\_\_init\_\_.py" file**
