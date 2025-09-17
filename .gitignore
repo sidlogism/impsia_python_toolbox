@@ -16,7 +16,7 @@
 # .project
 # .settings
 ########################################
-# generated pyhon files e.g. executables
+# generated python files e.g. executables
 ########################################
 *.pyc
 *.pyo
@@ -39,3 +39,5 @@ dist
 *.bak
 *.log
 *.log.*
+*.tox
+*.idea

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit test cases for testing the subprocess tools and subprocess utilities of impsia_python_toolbox."""
+"""Unit test cases for testing the subprocess tools and subprocess utilities of sidlogism_python_toolbox."""
 
 from logging import Logger
 from typing import Any
@@ -7,8 +7,8 @@ import logging
 import subprocess
 import sys
 import unittest
-from impsia.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, KEY_FAILED_PROCESS, KEY_TIMEOUT_PROCESS
-from impsia.python_toolbox.subprocess_tools import SubprocessRunner
+from sidlogism.python_toolbox.subprocess_tools import KEY_SUCCESSFUL_PROCESS, KEY_FAILED_PROCESS, KEY_TIMEOUT_PROCESS
+from sidlogism.python_toolbox.subprocess_tools import SubprocessRunner
 
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)

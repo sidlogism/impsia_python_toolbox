@@ -1,5 +1,5 @@
 """
-Miscellaneous tools for the IMPSIA toolbox which cover different problem domains and topics or which are commonly used by the other toolbox-tools.
+Miscellaneous shared components and tools used by the other modules in sidlogism_python_toolbox.
 
 This module provides common utility functions and error classes used across different
 problem domains. It includes tools for file path handling, string sanitization, and
@@ -50,13 +50,13 @@ except AttributeError:
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
 
-__all__: list[str] = ['ERRNO_SUCCESS', 'ERRNO_USAGE', 'ERRNO_UNKNOWN', 'ImpsiaError', 'UsageError',
+__all__: list[str] = ['ERRNO_SUCCESS', 'ERRNO_USAGE', 'ERRNO_UNKNOWN', 'SidlogismError', 'UsageError',
 	'strip_fileextension', 'sanitize_input_string', 'sanitize_userinput_path']
 
 
-class ImpsiaError(Exception):
+class SidlogismError(Exception):
 	"""
-	Generic exception base class for customized exception types for IMPSIA-specific errors.
+	Generic exception base class for customized exception types for sidlogism_python_toolbox-specific errors.
 
 	Attributes:
 		errno (int): Error number, defaults to ERRNO_UNKNOWN
@@ -68,7 +68,7 @@ class ImpsiaError(Exception):
 
 	def __init__(self, msg):
 		"""
-		Initialize ImpsiaError object with a message.
+		Initialize SidlogismError object with a message.
 
 		Args:
 			msg (str): Description of the error
@@ -77,7 +77,7 @@ class ImpsiaError(Exception):
 
 	def __str__(self) -> str:
 		"""
-		Paraphrase ImpsiaError object as string: Convert error to string representation.
+		Paraphrase SidlogismError object as string: Convert error to string representation.
 
 		Returns:
 			string representation of the error
@@ -85,9 +85,9 @@ class ImpsiaError(Exception):
 		return self.msg
 
 
-class UsageError(ImpsiaError):
+class UsageError(SidlogismError):
 	"""
-	Customized exception for incorrect usage of IMPSIA functionality.
+	Customized exception for incorrect usage of sidlogism_python_toolbox functionality.
 
 	This exception is raised when functions or methods are used incorrectly,
 	such as providing invalid parameters or violating usage constraints.

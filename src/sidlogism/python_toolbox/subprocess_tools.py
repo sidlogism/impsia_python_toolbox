@@ -22,7 +22,7 @@ import os
 import pwd
 import subprocess
 import sys
-from impsia.python_toolbox.misc_common_tools import UsageError
+from sidlogism.python_toolbox.misc_common_tools import UsageError
 
 
 if __name__ == "__main__":

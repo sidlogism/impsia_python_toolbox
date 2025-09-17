@@ -7,10 +7,10 @@ where = ["src"]  # ["."] by default
 namespaces = true  # true by default
 
 [project]
-name = "impsia_python_toolbox"
+name = "sidlogism_python_toolbox"
 version = "0.0.1"
 authors = [
-    {name = "imperfectsilentart", email = "imperfectsilentart@mailbox.org"},
+    {name = "sidlogism", email = "sidlogism@mailbox.org"},
 ]
 description = "This is a personal collection of small python tools frequently or occasionally needed in smaller python experiments and python scripts."
 readme = "README.md"
@@ -28,5 +28,5 @@ license = {text = "Apache-2.0"}
 
 
 [project.urls]
-Homepage = "https://github.com/imperfectsilentart/impsia_python_toolbox/"
-Issues = "https://github.com/imperfectsilentart/impsia_python_toolbox/issues/"
+Homepage = "https://github.com/sidlogism/sidlogism_python_toolbox/"
+Issues = "https://github.com/sidlogism/sidlogism_python_toolbox/issues/"

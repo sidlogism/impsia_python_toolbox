@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit test cases for testing the logging tools and logging utilities of impsia_python_toolbox."""
+"""Unit test cases for testing the logging tools and logging utilities of sidlogism_python_toolbox."""
 
 from datetime import datetime
 from logging import Logger
@@ -10,13 +10,13 @@ import os
 import sys
 import time
 import unittest
-from impsia.python_toolbox import logging_tools
+from sidlogism.python_toolbox import logging_tools
 
 
 _LOGFILE_ENCODING: str = 'UTF-8'
 # configure logger for this script
 _LOGCONFIG_ENCODING: str = 'UTF-8'
-_LOGCONFIG_RELATIVE_PATH: str = 'src/impsia/python_toolbox/logging_default_config.ini'
+_LOGCONFIG_RELATIVE_PATH: str = 'src/sidlogism/python_toolbox/logging_default_config.ini'
 logging.config.fileConfig(_LOGCONFIG_RELATIVE_PATH, disable_existing_loggers=False, encoding=_LOGCONFIG_ENCODING)
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
@@ -25,7 +25,7 @@ __all__: list[str] = ['TestLoggingTools']
 
 
 class TestLoggingTools(unittest.TestCase):
-	"""Unit test case for testing the logging configuration and the loging tools and utilities of impsia_python_toolbox."""
+	"""Unit test case for testing the logging configuration and the loging tools and utilities of sidlogism_python_toolbox."""
 
 	def setUp(self) -> None:
 		# check precondition for tests: global root loglevel must be at least INFO or below:
@@ -36,7 +36,7 @@ class TestLoggingTools(unittest.TestCase):
 	def _compare_last_logline_with_expected_keywords(self, expected_keywords: str) -> None:
 		"""Compare the last line of the test-logfile with the given expected keywords and require both to be equal as unit test condition."""
 		expected_keywords_length: int = len(expected_keywords)
-		with open(file='./testing_impisatoolbox001.log', mode='rt', encoding=_LOGFILE_ENCODING) as logfile:
+		with open(file='./testing_sidlogismtoolbox001.log', mode='rt', encoding=_LOGFILE_ENCODING) as logfile:
 			# read all lines until EOF and get last line
 			lines: list[str] = logfile.read().splitlines()
 			last_line: str = lines[-1]

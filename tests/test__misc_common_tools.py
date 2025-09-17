@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Unit test cases for testing the miscellaneous common tools of impsia_python_toolbox."""
+"""Unit test cases for testing the miscellaneous common tools of sidlogism_python_toolbox."""
 
 from logging import Logger
 import logging
 import os
 import tempfile
 import unittest
-from impsia.python_toolbox.misc_common_tools import sanitize_userinput_path, sanitize_input_string, strip_fileextension, UsageError
+from sidlogism.python_toolbox.misc_common_tools import sanitize_userinput_path, sanitize_input_string, strip_fileextension, UsageError
 
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)

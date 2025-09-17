@@ -34,7 +34,7 @@ max-line-length = 150
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 #
-# added by impsia: disbabling the following warnings:
+# added by sidlogism: disbabling the following warnings:
 #     W1201: Use lazy % formatting in logging functions (logging-not-lazy)
 #     W1203: Use lazy % or % formatting in logging functions (logging-fstring-interpolation)
 disable = ["logging-not-lazy","logging-fstring-interpolation"]
