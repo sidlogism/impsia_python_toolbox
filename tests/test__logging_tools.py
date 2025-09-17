@@ -17,7 +17,7 @@ _LOGFILE_ENCODING: str = 'UTF-8'
 # configure logger for this script
 _LOGCONFIG_ENCODING: str = 'UTF-8'
 _LOGCONFIG_RELATIVE_PATH: str = 'src/impsia/python_toolbox/logging_default_config.ini'
-logging.config.fileConfig(_LOGCONFIG_RELATIVE_PATH, disable_existing_loggers=True, encoding=_LOGCONFIG_ENCODING)
+logging.config.fileConfig(_LOGCONFIG_RELATIVE_PATH, disable_existing_loggers=False, encoding=_LOGCONFIG_ENCODING)
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
 

@@ -26,10 +26,6 @@ if __name__ == "__main__":
 	sys.exit(os.EX_USAGE)
 
 
-_LOGGER: Logger = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.NOTSET)
-
-
 ERRNO_SUCCESS: int = 0
 try:
 	# Not all os.EX_... errnos are available on Windows => accessing them might throw an exception on Windows
@@ -50,6 +46,9 @@ try:
 	ERRNO_UNKNOWN = os.EX_SOFTWARE
 except AttributeError:
 	pass
+
+_LOGGER: Logger = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.NOTSET)
 
 __all__: list[str] = ['ERRNO_SUCCESS', 'ERRNO_USAGE', 'ERRNO_UNKNOWN', 'ImpsiaError', 'UsageError',
 	'strip_fileextension', 'sanitize_input_string', 'sanitize_userinput_path']
@@ -203,23 +202,13 @@ def sanitize_userinput_path(path: str, encoding: str,  # pylint: disable=too-man
 
 	Note:
 		- The function only considers symlinks, directories, and regular files
+		- Path expansion for special directory names (e. g. "~") is not supported yet
 		- The function does not check for FIFOs, sockets, or other special file types
 		- Mind the "mustbe"-flags and "maybe"-flags! Per default they are all set to False, which simply disqualifies all paths!
 		- At least one of maybe_symlink, maybe_directory, or maybe_file must be True (according to your use case)
 		- If a 'mustbe_*' flag is True, the corresponding 'maybe_*' flag is automatically set to True
 		- Special handling is implemented for Windows drive letters
 	"""
-	# maybe_suid_executable=False
-	########################################
-	# possible test paths:
-	#
-	# C:\Program Files\Common Files
-	# \;\&\'"#$%C:\Program Files\Common Files/~/foo-bar_baz/1234567890\u00c4\u00d6\u00dc\u00df\u00e4\u00f6\u00fc.txt"
-	# + umlauts
-	# ~/Arbeitsflaeche/
-	# /usr/bin/apt-get
-	########################################
-
 	########################################
 	# Check that flag logic is correctly used and infer correct values of "maybe"-flags:
 	# If a "mustbe"-flag is True, the corresponding "maybe"-flag will be automatically set to True.

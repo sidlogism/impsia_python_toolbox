@@ -37,6 +37,7 @@ KEY_FAILED_PROCESS: str = 'p_fail'
 # The os-names are the names used in os.name (which gives kind of a rough os-category)
 # _TESTED_OPERATING_SYSTEMS = ['posix', 'nt']
 _TESTED_OPERATING_SYSTEMS: list[str] = ['posix']
+
 _LOGGER: Logger = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.NOTSET)
 
@@ -48,7 +49,7 @@ class SubprocessRunner:
 	Utility-wrapper for running subprocesses easily and reliably.
 
 	Attributes:
-		pipe_encoding: str
+		pipe_encoding (str):
 			The encoding used for pipes/streams (stdout, stderr, etc.) and text file handles.
 			This is determined by the system default encoding or set to 'UTF-8' as a last resort.
 	"""
@@ -77,8 +78,8 @@ class SubprocessRunner:
 		See also https://docs.python.org/3/library/os.html#utf8-mode and https://docs.python.org/3/library/sys.html#sys.stdout .
 
 		Args:
-			stream: the stream for which the encoding should be determined (e.g. sys.stdout)
-			last_resort_encoding (optional): the last resort encoding to be used if no other encoding could be determined
+			stream (TextIO): the stream for which the encoding should be determined (e.g. sys.stdout)
+			last_resort_encoding (str, optional): the last resort encoding to be used if no other encoding could be determined
 
 		Returns:
 			The determined default encoding of the given stream or from environment configurations and settings.
@@ -132,8 +133,8 @@ class SubprocessRunner:
 		Create a nested inner function object setting the given UID and GID in operating system environment.
 
 		Args:
-			user_uid: the new, desired UID to be set in operating system environment
-			user_gid: the new, desired GID to be set in operating system environment
+			user_uid (int): the new, desired UID to be set in operating system environment
+			user_gid (int): the new, desired GID to be set in operating system environment
 
 		Returns:
 			A nested inner function object setting the given UID and GID in operating system environment.
@@ -154,13 +155,15 @@ class SubprocessRunner:
 		Run given command line as subprocess (and thereby potentially running external applications).
 
 		Args:
-			commandline_args: the given command line with all its command line arguments (each CLI option and option-value is given a separate list entry)
+			commandline_args (list[str]): the given command line with all its command line arguments
+				(each CLI option and option-value is given a separate list entry)
 				IMPORTANT: Don't use any double quotes in the args parameter here because the subprocess module somehow ignores such CLI arguments.
 				For example use rsync --exclude=.viminfo --exclude=*.swp instead of rsync --exclude=".viminfo" --exclude="*.swp".
 				For example use ['ps', '-p', str(pid), '-uAO', 'msgsnd,msgrcv'] instead of ['ps', '-p', str(pid), '-uAO', '"msgsnd,msgrcv"'].
-			timeout (optional): timeout interval in seconds for executing the given command line. The default value is None, which deactivates the timeout.
-			suppress_missing_timeout_warning (optional): If False, a warning message will be printed if the optional timeout-argument was not provided.
-			username (optional): name of alternative operating system user to execute the subprocess
+			timeout (int, optional): timeout interval in seconds for executing the given command line.
+				The default value is None, which deactivates the timeout.
+			suppress_missing_timeout_warning (bool, optional): If False, a warning message will be printed if the optional timeout-argument was not provided.
+			username (str, optional): name of alternative operating system user to execute the subprocess
 				IMPORTANT: This option is only functional on POSIX/unix/linux operating systems!
 
 		Examples:
@@ -187,7 +190,7 @@ class SubprocessRunner:
 
 		if timeout is None and not suppress_missing_timeout_warning:
 			_LOGGER.warning(
-				'Missing optional timeout-argument. Toolbox-user (programmer) didn\'t provide a timeout for running this new subprocess.'
+				'Missing optional timeout-argument. Toolbox-user (programmer) didn\'t provide a timeout for running this new subprocess. '
 				'Thus a hanging subprocess cannot be detected and may run eternally.'
 				)
 		results: dict[str, Any] = {}
@@ -201,7 +204,7 @@ class SubprocessRunner:
 			#   from get_inner_function_object_setting_uid_and_gid.
 			if os.name != 'posix':
 				raise UsageError(
-					'The username-argument was provided for running subprocess with different operating system user. '
+					'The username-argument was provided for running subprocess with a different operating system user. '
 					f'But this feature is currently only accessible on POSIX/unix/linux systems and your current system has different type "{os.name}".'
 					)
 			pw_record: pwd.struct_passwd = pwd.getpwnam(username)
@@ -219,6 +222,7 @@ class SubprocessRunner:
 					capture_output=True,
 					encoding=self.pipe_encoding,
 					errors='namereplace',
+					# settings for switching user context to given operating system user
 					env=new_env,
 					preexec_fn=self.get_inner_function_object_setting_uid_and_gid(user_uid, user_gid)
 					)

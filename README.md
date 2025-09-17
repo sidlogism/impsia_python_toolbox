@@ -9,6 +9,25 @@ Supported platforms: OpenBSD. Not tested on Windows & Linux (yet).
 
 Just clone the git repo and import the modules by modifying your sys.path or your environment variable `PYTHONPATH` accordingly.
 **We recommend using `PYTHONPATH` and `MYPYPATH`. See "Setting environment variables" and "Setting sys.path" below.**
+
+### Hints for log configuration ###
+When using a predefined log configuration file like in the code snippet below, be aware of the following effect of parameter `disable_existing_loggers` of function `logging.config.fileConfig()`.
+If `disable_existing_loggers==True`, which is the default, all loggers that exist at the moment of calling `logging.config.fileConfig()` are disabled. This also includes loggers is **other, imported modules:** If you import modules which use internal **module-level loggers in the module scope** (i. e. outside any class or function definition like in the code snippet below) **before** calling `logging.config.fileConfig()`, all these internal module-level loggers of the imported modules **will be disabled as well since they were already constructed and existing beforehand when the corresponding import-statement was called.**
+
+To avoid this you can either set `disable_existing_loggers=False` like in the code snippet below or you can move the line calling `logging.config.fileConfig()` **above** any import-statements of modules whose internal module-level logger you like to preserve.
+For more details, see:
+* https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig
+* https://stackoverflow.com/questions/35325042/python-logging-disable-logging-from-imported-modules/47685462#47685462
+
+Logger config example from `test_logging_tools.py` using the idiom `_LOGGER = logging.getLogger(__name__)` to create an internal **module-level** logger:
+
+	# configure logger for this script
+	_LOGCONFIG_ENCODING: str = 'UTF-8'
+	_LOGCONFIG_RELATIVE_PATH: str = 'src/impsia/python_toolbox/logging_default_config.ini'
+	logging.config.fileConfig(_LOGCONFIG_RELATIVE_PATH, disable_existing_loggers=False, encoding=_LOGCONFIG_ENCODING)
+	_LOGGER: Logger = logging.getLogger(__name__)
+	_LOGGER.setLevel(logging.NOTSET)
+
 ### Setting environment variables ###
 In order to avoid false-positive linter-errors caused by the import-discovery mechanisms of these linters not recognizing sys.path.append(), you have to set the environment variables `MYPYPATH` and `PYTHONPATH` (the latter for pylint).  **You also need to set `PYTHONPATH` if you want to avoid using sys.path.append() in your python scripts or unit tests altogether.**
 
@@ -95,7 +114,9 @@ _Side notes:_
 	* You can also run the `tox`-command in any subdirectory of "distribution root" (see definition below).
 * 4. Customize `tox.ini` file for your purposes.
 	* Place your own Python code for example in the `src/` subdirectory and your test code in the `tests/` subdirectory.
-	* Alternatively, place your Python code in some other directory and adapt the commands and parameters for import-discovery in `tox.ini` accordingly. See "src layout" below for more details.
+	* Alternatively, place your Python code in some other directory and adapt the commands and parameters for code discovery and import-discovery in `tox.ini` accordingly. See "src layout" below for more details.
+    * **For importing the `\*\_tools.py` modules in your own Python modules consult our test modules in the `tests/` subdirectory and see "Setting environment variables" and "Setting sys.path" above.** 
+	* Heed the `Hints for log configuration` above.
 
 
 ## How to run the unit tests, linters and the single doctests manually ##
@@ -129,7 +150,7 @@ For uniformity and simplicity, all documentation will stick to the following ter
 		* https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
 		* https://packaging.python.org/en/latest/tutorials/packaging-projects/
 			* name origin: "[...] the existence of an \_\_init\_\_.py file allows users to import the directory as a regular package, [...]"
-        * legacy docu: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
+        * legacy documentation: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
 			* "package: a module that contains other modules; typically contained in a directory in the filesystem and distinguished from other directories by the presence of a file \_\_init\_\_.py."
 
 * "namespace package"
@@ -153,5 +174,5 @@ For uniformity and simplicity, all documentation will stick to the following ter
 		* https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/
 			* "A distribution package is a piece of software that you can install."
 			* "Alternatively, the term “distribution package” can be used to refer to a specific file that contains a certain version of a project."
-		* legacy docu: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
+		* legacy documentation: https://docs.python.org/3.11/distutils/introduction.html#concepts-terminology
         	* "module distribution: a collection of Python modules distributed together as a single downloadable resource and meant to be installed en masse."

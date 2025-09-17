@@ -27,6 +27,7 @@ if __name__ == "__main__":
 	print("ERROR: this module is not intended for direct execution as standalone script.")
 	sys.exit(os.EX_USAGE)
 
+
 # Lines of special characters for separating log sections visually.
 LOGSEPARATOR_HASH: str = 20 * '#'
 LOGSEPARATOR_EQUAL: str = 20 * '='
@@ -36,6 +37,9 @@ LOGSEPARATOR_HYPHEN: str = 20 * '-'
 LOGSEPARATOR_DOT: str = 20 * '.'
 
 _DATEFORMAT_STARTING_TIME: str = '%H:%M:%S, %Y-%m-%d %A (%d %B %Y)'
+
+_LOGGER: Logger = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.NOTSET)
 
 __all__: list[str] = [
 	'print_my_logwelcome',
@@ -81,7 +85,7 @@ def _current_user_has_admin_privileges() -> bool:
 	"""
 	if os.name == 'nt':
 		try:
-			# only windows users with admin privileges can read the C:\windows\temp
+			# only Windows users with admin privileges can read the C:\windows\temp
 			os.listdir(os.sep.join([os.environ.get('SystemRoot', r'C:\windows'), 'temp']))
 		except OSError:
 			return False
@@ -100,20 +104,18 @@ def print_my_logwelcome(executing_script_basename: str, start_time: datetime, ar
 		start_time (datetime): The starting time of the script or module execution.
 		argv (list[str], optional): The command line arguments passed to the script or module.
 	"""
-	logger: Logger = logging.getLogger(__name__)
-	logger.setLevel(logging.NOTSET)
-	logger.info(LOGSEPARATOR_HASH)
+	_LOGGER.info(LOGSEPARATOR_HASH)
 	if argv is None:
-		logger.info(f'Starting script "{executing_script_basename}" without any CLI-arguments.')
+		_LOGGER.info(f'Starting script "{executing_script_basename}" without any CLI-arguments.')
 	else:
-		logger.info(f'Starting script "{executing_script_basename}" with arguments "{str(argv[1:])}".')
-	logger.info(f'Current user:"{str(_get_current_user_name())}" has administrator/superuser privileges:"{str(_current_user_has_admin_privileges())}".')
-	logger.info(f'Starting at: {start_time.strftime(_DATEFORMAT_STARTING_TIME)}.')
+		_LOGGER.info(f'Starting script "{executing_script_basename}" with arguments "{str(argv[1:])}".')
+	_LOGGER.info(f'Current user:"{str(_get_current_user_name())}" has administrator/superuser privileges:"{str(_current_user_has_admin_privileges())}".')
+	_LOGGER.info(f'Starting at: {start_time.strftime(_DATEFORMAT_STARTING_TIME)}.')
 	if sys.stdin:
-		logger.info(f'sys.stdin.isatty():{str(sys.stdin.isatty())}')
-	logger.info(f'sys.stdout.isatty():{str(sys.stdout.isatty())}')
-	logger.info(f'sys.stderr.isatty():{str(sys.stderr.isatty())}')
-	logger.info(LOGSEPARATOR_UNDERSCORE)
+		_LOGGER.info(f'sys.stdin.isatty():{str(sys.stdin.isatty())}')
+	_LOGGER.info(f'sys.stdout.isatty():{str(sys.stdout.isatty())}')
+	_LOGGER.info(f'sys.stderr.isatty():{str(sys.stderr.isatty())}')
+	_LOGGER.info(LOGSEPARATOR_UNDERSCORE)
 
 
 def print_my_loggoodbye(start_time: datetime) -> None:
@@ -123,11 +125,9 @@ def print_my_loggoodbye(start_time: datetime) -> None:
 	Args:
 		start_time (datetime): The starting time of the script or module execution.
 	"""
-	logger: Logger = logging.getLogger(__name__)
-	logger.setLevel(logging.NOTSET)
-	logger.info(LOGSEPARATOR_UNDERSCORE)
-	logger.info(f'Finished script which startet at: {start_time.strftime(_DATEFORMAT_STARTING_TIME)}.')
+	_LOGGER.info(LOGSEPARATOR_UNDERSCORE)
+	_LOGGER.info(f'Finished script which startet at: {start_time.strftime(_DATEFORMAT_STARTING_TIME)}.')
 	time_diff: timedelta = datetime.now() - start_time
-	logger.info(f'Full script runtime: {str(time_diff)}')
-	logger.info('For details see logfile which is usally located in the same directory as executed script.')
-	logger.info(LOGSEPARATOR_HASH)
+	_LOGGER.info(f'Full script runtime: {str(time_diff)}')
+	_LOGGER.info('For details see logfile which is usally located in the same directory as executed script.')
+	_LOGGER.info(LOGSEPARATOR_HASH)
